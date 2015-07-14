@@ -1,0 +1,13 @@
+package com.gtanla.android.utils;
+
+/**
+ * List of all Preferences keys.
+ * 
+ * @author gtalbot
+ * 
+ */
+public interface PreferenceConstants {
+
+	/** Current user account identifier. */
+	static final String ACCOUNT_ID = "ACCOUNT_ID";
+}

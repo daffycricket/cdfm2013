@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <!-- General -->
+    <string name="app_name">#MOBDL</string>
+    <string name="action_settings">Settings</string>
+	<string name="lblDescription">L\'appli de la communauté mobile en France</string>
+    
+    
+    
+    <!-- Main connect -->
+    <string name="mcLblSubscribe">Je deviens membre gratuitement et je m\'inscris !</string>
+    <string name="mcLblBtnFacebookConnect">Facebook Connect</string>
+    <string name="mcLblFirstName">PRENOM</string>
+    <string name="mcLblSurName">NOM</string>
+    <string name="mcLblEmail">EMAIL</string>
+    <string name="mcLblPassword">Mot de passe</string>
+    <string name="mcLblConfirmPassword">Confirmer mot de passe</string>
+    <string name="mcLblAcceptCG">J\'accepte les conditions générales</string>
+    <string name="mcLblBtnLater">Plus tard</string>
+    <string name="mcLblBtnYes">J\'en suis</string>
+    
+    <!-- Dashboard -->
+    <string name="lblNews">News</string>
+    <string name="lblJobs">Jobs</string>
+    <string name="lblWikiMobi">Wiki Mobi</string>
+    <string name="lblEvents">Events</string>
+    <string name="lblCallProjects">Appel à projets</string>
+    <string name="lblTouch">Touch !</string>
+    <string name="lblQRCode">QRCode</string>
+    <string name="lblMyAccount">Mon compte</string>
+    <string name="lblFavorites">Favoris!</string>
+    <string name="lblChat">Chat</string>
+    
+</resources>

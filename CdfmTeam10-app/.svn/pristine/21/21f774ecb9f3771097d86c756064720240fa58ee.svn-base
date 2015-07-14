@@ -1,0 +1,356 @@
+package com.gtanla.android;
+
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.text.Html;
+import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.gson.Gson;
+import com.gtanla.android.app.App;
+import com.gtanla.android.cloud.bo.Account;
+import com.gtanla.android.cloud.bo.GeoCoordinate;
+import com.gtanla.android.task.IAsyncCallback;
+import com.gtanla.android.task.SigninTask;
+import com.gtanla.android.task.UpdateAccountTask;
+import com.gtanla.android.utils.Constants;
+import com.gtanla.android.utils.DialogHelper;
+import com.gtanla.android.utils.GPSTracker;
+import com.gtanla.android.utils.PreferenceConstants;
+import com.gtanla.android.utils.ValidationUtils;
+
+/**
+ * Handles user signin case.
+ * 
+ * @author Nico
+ * 
+ */
+public class SigninActivity extends Activity {
+
+	/**
+	 * "Yes / No" accept geoloc.
+	 */
+	private final DialogInterface.OnClickListener acceptGeolocDialogClickListener = new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(final DialogInterface dialog, final int which) {
+			switch (which) {
+			case DialogInterface.BUTTON_POSITIVE:
+				onGeolocAccepted();
+				break;
+			case DialogInterface.BUTTON_NEGATIVE:
+				onGeolocRefused();
+				break;
+			default:
+				break;
+			}
+		}
+	};
+
+	/**
+	 * The email edit text.
+	 */
+	private EditText edtEmail;
+
+	/**
+	 * The password edit text.
+	 */
+	private EditText edtPassword;
+
+	/**
+	 * Location.
+	 */
+	private GeoCoordinate geoCoordinates;
+
+	/**
+	 * Logged account.
+	 */
+	private Account mAccount;
+
+	/**
+	 * App Preferences.
+	 */
+	private SharedPreferences mPreferences;
+
+	/**
+	 * Callback when signin is done.
+	 */
+	private final IAsyncCallback<Object> onPostSigninCallback = new IAsyncCallback<Object>() {
+
+		@Override
+		public void execute(Object object) {
+			onPostSigning(object);
+		}
+	};
+
+	/**
+	 * Busy indicator..
+	 */
+	private ProgressDialog progressDialog;
+
+	/**
+	 * Checks whether loc services is enabled. If no => ask, if yes => carry on.
+	 */
+	private void checkForLocationServiceAndRequestLocation() {
+		// mlocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+		//
+		// // location services disabled
+		// boolean isNetworkProviderEnabled = mlocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+		// if (!isNetworkProviderEnabled) {
+		// askForGeolocServices();
+		// } else {
+		// requestLocation();
+		// }
+
+		// TODO améliorer en fonction des services activés ou non
+
+		startSigninProcess(true);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_signin);
+		mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+		edtPassword = (EditText) this.findViewById(R.id.edtPassword);
+		edtEmail = (EditText) this.findViewById(R.id.edtEmail);
+
+		// Click sur Register
+		Button btnCreateAccount = (Button) this.findViewById(R.id.btnCreateAccount);
+		btnCreateAccount.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(SigninActivity.this, ConnectActivity.class);
+				SigninActivity.this.startActivity(intent);
+				SigninActivity.this.finish();
+			}
+		});
+
+		// Set listener for LATER button
+		Button btnLater = (Button) this.findViewById(R.id.btnLater);
+		btnLater.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(SigninActivity.this, MainDashboardActivity.class);
+				SigninActivity.this.startActivity(intent);
+				SigninActivity.this.finish();
+			}
+		});
+
+		// Click sur Connect
+		Button btnConnect = (Button) this.findViewById(R.id.btnConnect);
+		btnConnect.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// Validate inputs
+				String errorMessageNotEmpty = SigninActivity.this.getResources().getText(R.string.errorMessageNotEmpty)
+						.toString();
+				String errorMessageEmailPattern = SigninActivity.this.getResources()
+						.getText(R.string.errorMessageEmailPattern).toString();
+
+				boolean validity = ValidationUtils.validateEditTextNotEmpty(edtPassword, errorMessageNotEmpty);
+				validity &= ValidationUtils.validateEditTextIsEmail(edtEmail, errorMessageEmailPattern);
+
+				// If the form is valid
+				if (validity) {
+
+					// ask for geoloc permission if not done
+					boolean isGeolocAccepted = mPreferences.getBoolean(PreferenceConstants.GEOLOC_ACCEPTED, false);
+					if (!isGeolocAccepted) {
+						DialogHelper.askForGeolocPermission(SigninActivity.this, acceptGeolocDialogClickListener);
+					} else {
+						startSigninProcess(true);
+					}
+				}
+
+			}
+		});
+
+		// click sur LOST PASSWORD
+		TextView txtLostPassword = (TextView) this.findViewById(R.id.txtLostPassword);
+		txtLostPassword.setText(Html.fromHtml(this.getText(R.string.lblLostPassword).toString()));
+		txtLostPassword.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				Intent intent = new Intent(SigninActivity.this, NewPasswordActivity.class);
+				SigninActivity.this.startActivity(intent);
+			}
+		});
+
+		// Set link and listener on CG button
+		TextView txtAcceptCG = (TextView) this.findViewById(R.id.txtAcceptCG);
+		txtAcceptCG.setText(Html.fromHtml(this.getText(R.string.lblYouAcceptCGIfYouUseApp).toString()));
+		txtAcceptCG.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				Intent intent = new Intent(Intent.ACTION_VIEW);
+				intent.setData(Uri.parse(SigninActivity.this.getString(R.string.urlCg)));
+				SigninActivity.this.startActivity(intent);
+				SigninActivity.this.finish();
+			}
+		});
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	/**
+	 * Called if user accepts geoloc.
+	 */
+	private void onGeolocAccepted() {
+		SharedPreferences.Editor editor = mPreferences.edit();
+		editor.putBoolean(PreferenceConstants.GEOLOC_ACCEPTED, true);
+		editor.commit();
+
+		checkForLocationServiceAndRequestLocation();
+	}
+
+	/**
+	 * Called if user refuses geoloc.
+	 */
+	private void onGeolocRefused() {
+		SharedPreferences.Editor editor = mPreferences.edit();
+		editor.putBoolean(PreferenceConstants.GEOLOC_ACCEPTED, false);
+		editor.commit();
+
+		startSigninProcess(false);
+	}
+
+	/**
+	 * Called when signin is done.
+	 * 
+	 * @param result
+	 */
+	private void onPostSigning(Object result) {
+
+		// error occured
+		if (result == null || result instanceof Exception) {
+
+			// Get default error message
+			String errorMessageSigninError = SigninActivity.this.getResources()
+					.getText(R.string.errorMessageSigninError).toString();
+
+			// Append specific message
+			if (result != null && Exception.class.isInstance(result)) {
+				errorMessageSigninError += ((Exception) result).getMessage();
+			}
+
+			// Display error and retur
+			Toast.makeText(this, errorMessageSigninError, Toast.LENGTH_LONG).show();
+
+			// Hide waiting div
+			if (progressDialog.isShowing()) {
+				progressDialog.dismiss();
+			}
+			return;
+		} else {
+			// account retrieved correctly
+			mAccount = (Account) result;
+
+			// update loc if possible
+			if (geoCoordinates != null) {
+				mAccount.setGeoCoordinates(new Gson().toJson(geoCoordinates));
+				UpdateAccountTask updateTask = new UpdateAccountTask(null, mAccount);
+				updateTask.execute();
+			}
+		}
+
+		// Hide waiting div
+		if (progressDialog.isShowing()) {
+			progressDialog.dismiss();
+		}
+
+		// Store id
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences.Editor editor = preferences.edit();
+		Account account = (Account) result;
+		editor.putLong(PreferenceConstants.ACCOUNT_ID, account.getId());
+		// editor.putString(PreferenceConstants.ACCOUNT_NAME, account.getName());
+		// editor.putString(PreferenceConstants.ACCOUNT_FIRSTNAME, account.getFirstName());
+		// editor.putString(PreferenceConstants.ACCOUNT_EMAIL, account.getEmail());
+		// editor.putString(PreferenceConstants.ACCOUNT_LOCATION, account.getGeoCoordinates());
+		editor.commit();
+
+		App.getInstance().setAccount(account);
+
+		// start main dashboard and close this
+		Class<?> targetClass = MainDashboardActivity.class;
+		if (this.getIntent().getExtras() != null) {
+			targetClass = (Class<?>) this.getIntent().getExtras().get(Constants.NEXT_ACTIVITY_CLASS);
+		}
+		Intent intent = new Intent(this, targetClass);
+		this.startActivity(intent);
+		this.finish();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onStart()
+	 */
+	@Override
+	public void onStart() {
+		super.onStart();
+		EasyTracker.getInstance(this).activityStart(this);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onStop()
+	 */
+	@Override
+	public void onStop() {
+		super.onStop();
+		EasyTracker.getInstance(this).activityStop(this);
+	}
+
+	/**
+	 * Launches the user signin task.
+	 */
+	private void startSigninProcess(boolean isUserLocation) {
+
+		// retrieves location if available and uses location
+		if (isUserLocation) {
+			GPSTracker gPSTracker = new GPSTracker(this);
+			geoCoordinates = new GeoCoordinate(gPSTracker.getAltitude(), gPSTracker.getLatitude(),
+					gPSTracker.getLongitude());
+		}
+
+		// read values
+		String email = edtEmail.getText().toString();
+		String password = edtPassword.getText().toString();
+
+		// call task
+		String message = SigninActivity.this.getResources().getText(R.string.waitMessage).toString();
+		progressDialog = ProgressDialog.show(SigninActivity.this, message, message, false);
+		SigninTask task = new SigninTask(onPostSigninCallback);
+		task.execute(email, password);
+	}
+}

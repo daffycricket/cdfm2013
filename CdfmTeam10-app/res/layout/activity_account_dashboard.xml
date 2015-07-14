@@ -1,0 +1,101 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/mainScrollLayout" >
+
+    <LinearLayout style="@style/mainLinearLayout" >
+
+        <!-- Activity titles - start -->
+
+        <LinearLayout style="@style/activityLinearLayout" >
+
+            <LinearLayout style="@style/activityTitleLayout" >
+
+                <TextView
+                    style="@style/activityTitle"
+                    android:text="@string/lblMyAccount" />
+
+                <View
+                    style="@style/activityBar"
+                    android:layout_width="match_parent" />
+            </LinearLayout>
+        </LinearLayout>
+        <!-- Activity titles - end -->
+
+        <LinearLayout style="@style/layoutMatchWrapHorizontalCenter" >
+
+            <LinearLayout style="@style/layoutWrapWrapVerticalCenter" >
+
+                <Button
+                    android:id="@+id/btnMyFavorites"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="fill"
+                    android:background="@drawable/backgroud_selector_favoris" />
+
+                <TextView
+                    style="@style/selectorTitle"
+                    android:text="@string/lblMyFavorites" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/layoutWrapWrapVerticalCenter" >
+
+                <Button
+                    android:id="@+id/btnMyEvents"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/backgroud_selector_events" />
+
+                <TextView
+                    style="@style/selectorTitle"
+                    android:text="@string/lblMyEvents" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/layoutMatchWrapHorizontalCenter"
+            android:paddingBottom="30dp" >
+
+            <LinearLayout style="@style/layoutWrapWrapVerticalCenter" >
+
+                <Button
+                    android:id="@+id/btnMyParams"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/backgroud_selector_events" />
+
+                <TextView
+                    style="@style/selectorTitle"
+                    android:text="@string/lblMyParams" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/layoutWrapWrapVerticalCenter" >
+
+                <Button
+                    android:id="@+id/btnMyAccount"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/backgroud_selector_moncompte" />
+
+                <TextView
+                    style="@style/selectorTitle"
+                    android:text="@string/lblMyAccount" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnDisconnect"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/backg_alaune"
+            android:text="@string/lblDisconnect" />
+    </LinearLayout>
+
+</ScrollView>

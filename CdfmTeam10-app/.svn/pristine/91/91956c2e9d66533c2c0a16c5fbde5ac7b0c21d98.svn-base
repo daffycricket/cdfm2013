@@ -1,0 +1,47 @@
+package com.gtanla.android.task;
+
+import android.os.AsyncTask;
+
+import com.gtanla.android.cloud.BackendClient;
+import com.gtanla.android.cloud.BackendException;
+
+/**
+ * An AsyncTask aimed to signin.
+ */
+public class SigninTask extends AsyncTask<String, Void, Object> {
+
+	/** Callback */
+	private final IAsyncCallback<Object> callback;
+
+	/**
+	 * @param callback
+	 */
+	public SigninTask(IAsyncCallback<Object> callback) {
+		super();
+		this.callback = callback;
+	}
+
+	@Override
+	protected Object doInBackground(String... args) {
+		String email = args[0];
+		String password = args[1];
+		Object toReturn = null;
+
+		try {
+			toReturn = BackendClient.getInstance().checkAccount(email, password);
+		} catch (BackendException e) {
+			toReturn = e;
+		}
+
+		return toReturn;
+	}
+
+	@Override
+	protected void onPostExecute(Object result) {
+
+		// Call callback
+		if (callback != null) {
+			callback.execute(result);
+		}
+	}
+}

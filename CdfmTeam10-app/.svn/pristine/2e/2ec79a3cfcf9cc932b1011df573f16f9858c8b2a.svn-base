@@ -1,0 +1,62 @@
+package com.gtanla.android;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+
+import com.google.analytics.tracking.android.EasyTracker;
+
+public class ConnectActivity extends Activity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_connect);
+        
+        
+        
+        Button btnLater = (Button)this.findViewById(R.id.btnLater);
+        btnLater.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(ConnectActivity.this, MainDashboardActivity.class);
+				ConnectActivity.this.startActivity(intent);
+			}
+		});
+        
+        Button btnYes = (Button)this.findViewById(R.id.btnYes);
+        btnYes.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(ConnectActivity.this, MainDashboardActivity.class);
+				ConnectActivity.this.startActivity(intent);
+			}
+		});
+        
+        
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+    
+    @Override
+    public void onStart() {
+      super.onStart();
+      EasyTracker.getInstance(this).activityStart(this);
+    }
+
+    @Override
+    public void onStop() {
+      super.onStop();
+      EasyTracker.getInstance(this).activityStop(this);
+    }
+}

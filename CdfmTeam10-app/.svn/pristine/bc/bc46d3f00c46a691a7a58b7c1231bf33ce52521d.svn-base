@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.2//EN" "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+<module name="Checker">
+    <property name="severity" value="warning"/>
+	<module name="FileLength">
+		<property name="severity" value="info"/>
+	</module>
+    <module name="TreeWalker">
+		<property name="tabWidth" value="4"/>
+		<module name="PackageName">
+            <property name="format" value="com.gtanla.[a-z\.]*$"/>
+        </module>
+		 <module name="MethodName">
+            <property name="format" value="^[a-z][a-zA-Z]*$"/>
+        </module>
+		<module name="MemberName">
+			<property name="format" value="^[a-z][a-zA-Z]{0,30}$"/>
+		</module>
+		<module name="ParameterName">
+			<property name="format" value="^[a-z][a-zA-Z]{0,30}$"/>
+		</module>
+		<module name = "TypeName">
+			<property name="format" value="^[A-Z][a-zA-Z0-9]*$"/>
+		</module>
+		<module name="LocalVariableName">
+            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+        </module>
+		<module name="ConstantName">
+            <property name="format" value="^[A-Z_0-9]*$"/>
+        </module>
+        <module name="IllegalCatch">
+            <property name="illegalClassNames" value=" java.lang.Throwable, java.lang.RuntimeException"/>
+        </module>
+		<module name="AvoidStarImport"/>
+		<module name="NoWhitespaceBefore"/>
+		<module name="LeftCurly">
+			<property name="option" value="eol"/>
+		</module>
+		<module name="RightCurly" />
+		<module name="AvoidInlineConditionals"/>
+		<!--Non supporté par le plugin Maven -->
+		<!--module name="OuterTypeFilename"/-->
+		<module name="MethodParamPad"/>
+		<module name="MethodLength">
+            <property name="max" value="20"/>
+            <property name="countEmpty" value="false"/>
+			<property name="severity" value="info"/>
+        </module>
+		<module name="UnusedImports"/>
+		<module name="LineLength">
+            <property name="max" value="150"/>
+        </module>
+		<module name="NeedBraces"/>
+		<module name="ReturnCount">
+            <property name="max" value="3"/>
+        </module>
+		<module name="ExplicitInitialization"/>
+		<module name="MagicNumber">
+			<property name="ignoreNumbers" value="-1, 0, 1"/>
+		</module>
+	    <module name="NoWhitespaceAfter">
+            <property name="tokens" value="BNOT,DEC,DOT,INC,LNOT,UNARY_MINUS,UNARY_PLUS"/>
+        </module>
+        <module name="NoWhitespaceBefore"/>	
+		<module name="WhitespaceAfter"/>
+        <module name="WhitespaceAround">
+            <property name="tokens" value="ASSIGN,BAND,BAND_ASSIGN,BOR,BOR_ASSIGN,BSR,BSR_ASSIGN,BXOR,BXOR_ASSIGN,COMMA,COLON,DIV,DIV_ASSIGN,EQUAL,GE,GT,LAND,LCURLY,LE,LITERAL_ASSERT,LITERAL_CATCH,LITERAL_DO,LITERAL_ELSE,LITERAL_FINALLY,LITERAL_FOR,LITERAL_IF,LITERAL_RETURN,LITERAL_SYNCHRONIZED,LITERAL_TRY,LITERAL_WHILE,LOR,LT,MINUS,MINUS_ASSIGN,MOD,MOD_ASSIGN,NOT_EQUAL,PLUS,PLUS_ASSIGN,QUESTION,RCURLY,SL,SLIST,SL_ASSIGN,SR,SR_ASSIGN,STAR,STAR_ASSIGN,LITERAL_ASSERT,TYPE_EXTENSION_AND,WILDCARD_TYPE"/>
+        </module>	
+		<module name="EmptyBlock"/>	
+    </module>
+	<module name="FileLength"/>
+</module>

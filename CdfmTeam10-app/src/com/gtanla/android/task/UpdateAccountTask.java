@@ -1,0 +1,65 @@
+package com.gtanla.android.task;
+
+import android.os.AsyncTask;
+
+import com.gtanla.android.cloud.BackendClient;
+import com.gtanla.android.cloud.BackendException;
+import com.gtanla.android.cloud.bo.Account;
+
+/**
+ * This task is used to create a ACCOUNT instance in AppEngine database via REST services.
+ * 
+ * @author gtalbot
+ * 
+ */
+public class UpdateAccountTask extends AsyncTask<Void, Void, Object> {
+
+	/** Account to create. */
+	private final Account accountToUpdate;
+
+	/** Callback. */
+	private final IAsyncCallback<Object> callback;
+
+	/**
+	 * Create a UpdateAccountTask.
+	 * 
+	 * @param callback
+	 *            Method to call after creation completion.
+	 * @param accountToUpdate
+	 *            Account to create.
+	 */
+	public UpdateAccountTask(IAsyncCallback<Object> callback, Account accountToUpdate) {
+		this.callback = callback;
+		this.accountToUpdate = accountToUpdate;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
+	 */
+	@Override
+	protected Object doInBackground(Void... params) {
+		Object toReturn = null;
+		try {
+			toReturn = BackendClient.getInstance().updateAccount(accountToUpdate);
+		} catch (BackendException e) {
+			toReturn = e;
+		}
+		return toReturn;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+	 */
+	@Override
+	protected void onPostExecute(Object result) {
+
+		// Call callback
+		if (callback != null) {
+			callback.execute(result);
+		}
+	}
+}

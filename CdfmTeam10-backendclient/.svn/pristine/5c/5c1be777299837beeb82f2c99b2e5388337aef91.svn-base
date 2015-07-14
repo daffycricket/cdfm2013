@@ -1,0 +1,43 @@
+package com.gtanla.android.cloud;
+
+import java.util.Collection;
+
+import com.gtanla.android.cloud.bo.Account;
+
+public class BackendClientTest {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+
+		// Set backend url
+		BackendClient.setBackendUrl("localhost:8888");
+
+		// List accounts
+		try {
+			Collection<Account> res = BackendClient.getInstance().listAccounts();
+			System.out.println(res);
+		} catch (BackendException e) {
+			e.printStackTrace();
+		}
+
+		// Create account
+		Long id = null;
+		try {
+			id = BackendClient.getInstance().createAccount(new Account("TestClientRest"));
+			System.out.println(id);
+		} catch (BackendException e) {
+			e.printStackTrace();
+		}
+
+		// Get account
+		try {
+			Account account = BackendClient.getInstance().getAccount(id);
+			System.out.println(account);
+		} catch (BackendException e) {
+			e.printStackTrace();
+		}
+	}
+
+}

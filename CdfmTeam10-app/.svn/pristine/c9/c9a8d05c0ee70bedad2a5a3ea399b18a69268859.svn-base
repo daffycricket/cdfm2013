@@ -1,0 +1,162 @@
+package com.gtanla.android;
+
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.text.Html;
+import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.analytics.tracking.android.EasyTracker;
+import com.gtanla.android.task.IAsyncCallback;
+import com.gtanla.android.task.SigninTask;
+import com.gtanla.android.utils.ValidationUtils;
+
+public class SigninActivity extends Activity {
+
+	private EditText edtEmail;
+
+	private EditText edtPassword;
+	/**
+	 * Callback when signin is done.
+	 */
+	private final IAsyncCallback<Object> onPostSigninCallback = new IAsyncCallback<Object>() {
+
+		@Override
+		public void execute(Object object) {
+			onPostSigning(object);
+
+		}
+	};
+	/** Waiting div. */
+	private ProgressDialog progressDialog;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_signin);
+
+		edtPassword = (EditText) this.findViewById(R.id.edtPassword);
+		edtEmail = (EditText) this.findViewById(R.id.edtEmail);
+
+		Button btnCreateAccount = (Button) this.findViewById(R.id.btnCreateAccount);
+		btnCreateAccount.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(SigninActivity.this, ConnectActivity.class);
+				SigninActivity.this.startActivity(intent);
+			}
+		});
+
+		// Click sur Se connecter
+		Button btnConnect = (Button) this.findViewById(R.id.btnConnect);
+		btnConnect.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// Validate inputs
+				String errorMessageNotEmpty = SigninActivity.this.getResources().getText(R.string.errorMessageNotEmpty)
+						.toString();
+				String errorMessageEmailPattern = SigninActivity.this.getResources()
+						.getText(R.string.errorMessageEmailPattern).toString();
+
+				boolean validity = ValidationUtils.validateEditTextNotEmpty(edtPassword, errorMessageNotEmpty);
+				validity &= ValidationUtils.validateEditTextNotEmpty(edtPassword, errorMessageNotEmpty);
+				validity &= ValidationUtils.validateEditTextIsEmail(edtEmail, errorMessageEmailPattern);
+
+				// If the form is valid
+				if (validity) {
+
+					// read values
+					String email = edtEmail.getText().toString();
+					String password = edtPassword.getText().toString();
+
+					// call task
+					String message = SigninActivity.this.getResources().getText(R.string.waitMessage).toString();
+					progressDialog = ProgressDialog.show(SigninActivity.this, message, message, false);
+					SigninTask task = new SigninTask(onPostSigninCallback);
+					task.execute(email, password);
+				}
+
+			}
+		});
+
+		// Set link and listener on CG button
+		TextView txtAcceptCG = (TextView) this.findViewById(R.id.txtAcceptCG);
+		txtAcceptCG.setText(Html.fromHtml(this.getText(R.string.lblAcceptCG).toString()));
+		txtAcceptCG.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				Intent intent = new Intent(Intent.ACTION_VIEW);
+				intent.setData(Uri.parse(SigninActivity.this.getString(R.string.urlCg)));
+				SigninActivity.this.startActivity(intent);
+			}
+		});
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	/**
+	 * Called when signin is done.
+	 * 
+	 * @param result
+	 */
+	private void onPostSigning(Object result) {
+
+		// Check parameter
+		if (result == null || result instanceof Exception) {
+
+			// Get default error message
+			String errorMessageSigninError = SigninActivity.this.getResources()
+					.getText(R.string.errorMessageSigninError).toString();
+
+			// Append specific message
+			if (result != null && Exception.class.isInstance(result)) {
+				errorMessageSigninError += ((Exception) result).getMessage();
+			}
+
+			// Display error and retur
+			Toast.makeText(this, errorMessageSigninError, Toast.LENGTH_LONG).show();
+
+			// Hide waiting div
+			if (progressDialog.isShowing()) {
+				progressDialog.dismiss();
+			}
+			return;
+		}
+
+		// Hide waiting div
+		if (progressDialog.isShowing()) {
+			progressDialog.dismiss();
+		}
+
+		Intent intent = new Intent(this, MainDashboardActivity.class);
+		this.startActivity(intent);
+		this.finish();
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		EasyTracker.getInstance(this).activityStart(this);
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		EasyTracker.getInstance(this).activityStop(this);
+	}
+}

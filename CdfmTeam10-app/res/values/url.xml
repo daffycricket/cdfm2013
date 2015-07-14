@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- General -->
+    <string name="urlAppengine">1.team-tarot.appspot.com</string>
+    <string name="urlCg">http://team-tarot.appspot.com/cg.html</string>
+    
+</resources>

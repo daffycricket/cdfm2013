@@ -1,0 +1,67 @@
+package com.gtanla.android;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.Html;
+import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.TextView;
+
+import com.google.analytics.tracking.android.EasyTracker;
+
+public class SigninActivity extends Activity {
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_signin);
+
+		Button btnCreateAccount = (Button) this
+				.findViewById(R.id.btnCreateAccount);
+		btnCreateAccount.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(SigninActivity.this,
+						ConnectActivity.class);
+				SigninActivity.this.startActivity(intent);
+			}
+		});
+
+		Button btnConnect = (Button) this.findViewById(R.id.btnConnect);
+		btnConnect.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(SigninActivity.this,
+						MainDashboardActivity.class);
+				SigninActivity.this.startActivity(intent);
+			}
+		});
+
+		TextView txtAcceptCG = (TextView) this.findViewById(R.id.txtAcceptCG);
+		txtAcceptCG.setText(Html.fromHtml(this.getText(R.string.lblAcceptCG)
+				.toString()));
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		EasyTracker.getInstance(this).activityStart(this);
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		EasyTracker.getInstance(this).activityStop(this);
+	}
+}

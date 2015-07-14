@@ -1,0 +1,2 @@
+eclipse.preferences.version=1
+prefWatchExpressions=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\r\n<watchExpressions>\r\n<expression enabled\="true" text\="response.getEntity().getContent()"/>\r\n<expression enabled\="true" text\=" e"/>\r\n<expression enabled\="true" text\="this.getIntent()"/>\r\n<expression enabled\="true" text\=" this.getIntent().getExtras()"/>\r\n<expression enabled\="true" text\="App.getInstance()"/>\r\n</watchExpressions>\r\n

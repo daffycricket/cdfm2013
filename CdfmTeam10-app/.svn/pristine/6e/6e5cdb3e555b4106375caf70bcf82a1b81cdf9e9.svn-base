@@ -1,0 +1,67 @@
+package com.gtanla.android;
+
+import android.os.Bundle;
+import android.support.v4.app.ListFragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+
+import com.gtanla.android.app.App;
+import com.gtanla.android.cloud.bo.Account;
+
+/**
+ * Fragment for displaying the list of accounts.
+ * 
+ * @author Nico
+ * 
+ */
+public class TouchListFragment extends ListFragment {
+
+	/**
+	 * Creates and returns a new TouchFilterFragment.
+	 * 
+	 * @param accounts
+	 * @return a new TouchFilterFragment.
+	 */
+	public static TouchListFragment newInstance() {
+		TouchListFragment fragment = new TouchListFragment();
+
+		Bundle args = new Bundle();
+		fragment.setArguments(args);
+
+		return fragment;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.support.v4.app.Fragment#onActivityCreated(android.os.Bundle)
+	 */
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+
+		String[] items = new String[App.getInstance().getAccounts().size()];
+		int i = 0;
+		for (Account item : App.getInstance().getAccounts()) {
+			items[i] = item.getEmail();
+			++i;
+		}
+
+		ArrayAdapter<String> aa = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, items);
+		setListAdapter(aa);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup,
+	 * android.os.Bundle)
+	 */
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.fragment_touch_list, container, false);
+	}
+
+}

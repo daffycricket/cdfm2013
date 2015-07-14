@@ -1,0 +1,117 @@
+package com.gtanla.android;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+
+import com.google.analytics.tracking.android.EasyTracker;
+import com.gtanla.android.utils.ValidationUtils;
+
+/**
+ * Main activity for page "HP.a"
+ * 
+ * @author gtalbot
+ * 
+ */
+public class MainDashboardActivity extends Activity {
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main_dashboard);
+
+		// Add listener on MYACCOUNT button
+		Button btnMyAccount = (Button) this.findViewById(R.id.btnMyAccount);
+		btnMyAccount.setOnClickListener(new OnClickListener() {
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see android.view.View.OnClickListener#onClick(android.view.View)
+			 */
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(MainDashboardActivity.this, AccountDashboardActivity.class);
+				MainDashboardActivity.this.startActivity(intent);
+			}
+		});
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
+
+		if (ValidationUtils.isConnected(this)) {
+			MenuItem miExportDB = menu.add("Disconnect");
+			miExportDB.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			miExportDB.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+				/*
+				 * (non-Javadoc)
+				 * 
+				 * @see android.view.MenuItem.OnMenuItemClickListener#onMenuItemClick(android.view.MenuItem)
+				 */
+				@Override
+				public boolean onMenuItemClick(MenuItem item) {
+
+					SharedPreferences preferences = PreferenceManager
+							.getDefaultSharedPreferences(MainDashboardActivity.this);
+					SharedPreferences.Editor editor = preferences.edit();
+					editor.clear();
+					editor.commit();
+
+					Intent intent = new Intent(MainDashboardActivity.this, SigninActivity.class);
+					MainDashboardActivity.this.startActivity(intent);
+					MainDashboardActivity.this.finish();
+
+					return true;
+				}
+			});
+		}
+
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onStart()
+	 */
+	@Override
+	public void onStart() {
+		super.onStart();
+
+		// Notify Google analytics tracker
+		EasyTracker.getInstance(this).activityStart(this);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onStop()
+	 */
+	@Override
+	public void onStop() {
+		super.onStop();
+
+		// Notify Google analytics tracker
+		EasyTracker.getInstance(this).activityStop(this);
+	}
+}

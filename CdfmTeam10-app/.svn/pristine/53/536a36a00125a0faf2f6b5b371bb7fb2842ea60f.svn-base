@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+ 
+    <ImageView
+        android:id="@+id/imgAccount"
+        android:layout_width="68dp"
+        android:layout_height="68dp"
+        android:layout_gravity="center_vertical"
+        android:padding="10px"
+        android:src="@drawable/icon_contact" />
+ 
+	<LinearLayout
+	    android:orientation="vertical"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	   	android:layout_gravity="center_vertical"
+	   	android:paddingLeft="10px"
+	    android:layout_weight="1">
+ 
+	    <TextView android:id="@+id/txtName"
+	         android:layout_width="fill_parent"
+	         android:layout_height="fill_parent"
+	         android:text="NomPrenom"
+	         />
+ 
+	    <TextView android:id="@+id/txtAddress"
+	         android:layout_width="fill_parent"
+	         android:layout_height="fill_parent" 
+	         android:text="Adresse"/>
+ 
+    </LinearLayout>
+ 
+</LinearLayout>

@@ -1,0 +1,9 @@
+package com.gtanla.android.task;
+
+public interface IAsyncCallback<T> {
+
+	/**
+	 * Executes the callback.
+	 */
+	void execute(T object);
+}

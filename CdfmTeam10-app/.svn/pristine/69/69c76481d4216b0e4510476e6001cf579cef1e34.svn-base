@@ -1,0 +1,20 @@
+package com.gtanla.android.utils;
+
+/**
+ * All constants.
+ * 
+ * @author gtalbot
+ * 
+ */
+public class Constants {
+
+	/** min distance between locations requests */
+	public static final int MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
+
+	/** min time between locations requests */
+	public static final int MIN_TIME_BW_UPDATES = 1000;
+
+	/** Constant for SigninActivity. */
+	public static final String NEXT_ACTIVITY_CLASS = "NEXT_ACTIVITY_CLASS";
+
+}

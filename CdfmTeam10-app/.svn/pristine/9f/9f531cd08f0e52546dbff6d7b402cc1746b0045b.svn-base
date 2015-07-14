@@ -1,0 +1,11 @@
+package com.gtanla.android.utils;
+
+public class Constants {
+
+	/** min distance between locations requests */
+	public static final int MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
+
+	/** min time between locations requests */
+	public static final int MIN_TIME_BW_UPDATES = 1000;
+
+}

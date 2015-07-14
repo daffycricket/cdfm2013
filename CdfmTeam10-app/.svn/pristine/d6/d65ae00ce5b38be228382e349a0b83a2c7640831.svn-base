@@ -1,0 +1,177 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lblDescription" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="A LA UNE ..." />
+
+    <LinearLayout style="@style/dashboardMainLayout" >
+
+        <LinearLayout style="@style/dashboardLayout" >
+
+            <FrameLayout style="@style/dashboardFrame" >
+
+                <ImageView
+                    style="@style/dashboardImage"
+                    android:src="@drawable/backg_blue_normal" />
+
+                <Button
+                    android:id="@+id/btnNews"
+                    style="@style/dashboardButton"
+                    android:background="@drawable/backgroud_selector_news" />
+            </FrameLayout>
+
+            <FrameLayout style="@style/dashboardFrame" >
+
+                <ImageView
+                    style="@style/dashboardImage"
+                    android:src="@drawable/backg_red_normal" />
+
+                <Button
+                    android:id="@+id/btnJobs"
+                    style="@style/dashboardButton"
+                    android:background="@drawable/backgroud_selector_jobs" />
+            </FrameLayout>
+
+            <FrameLayout style="@style/dashboardFrame" >
+
+                <ImageView
+                    style="@style/dashboardImage"
+                    android:src="@drawable/backg_green_normal" />
+
+                <Button
+                    android:id="@+id/btnWikiMobi"
+                    style="@style/dashboardButton"
+                    android:background="@drawable/backgroud_selector_wikimobi" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout style="@style/dashboardLayout" >
+
+            <FrameLayout style="@style/dashboardFrame" >
+
+                <ImageView
+                    style="@style/dashboardImage"
+                    android:src="@drawable/backg_red_normal" />
+
+                <Button
+                    android:id="@+id/btnEvents"
+                    style="@style/dashboardButton"
+                    android:background="@drawable/backgroud_selector_events" />
+            </FrameLayout>
+
+            <FrameLayout style="@style/dashboardFrame" >
+
+                <ImageView
+                    style="@style/dashboardImage"
+                    android:src="@drawable/backg_yellow_normal" />
+
+                <Button
+                    android:id="@+id/btnCallProjects"
+                    style="@style/dashboardButton"
+                    android:background="@drawable/backgroud_selector_appelprojet" />
+            </FrameLayout>
+
+            <FrameLayout style="@style/dashboardFrame" >
+
+                <ImageView
+                    style="@style/dashboardImage"
+                    android:src="@drawable/backg_blue_normal" />
+
+                <Button
+                    android:id="@+id/btnTouch"
+                    style="@style/dashboardButton"
+                    android:background="@drawable/backgroud_selector_touch" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout style="@style/dashboardLayout" >
+
+            <FrameLayout style="@style/dashboardFrame" >
+
+                <ImageView
+                    style="@style/dashboardImage"
+                    android:src="@drawable/backg_yellow_normal" />
+
+                <Button
+                    android:id="@+id/btnQRCode"
+                    style="@style/dashboardButton"
+                    android:background="@drawable/backgroud_selector_qrcode" />
+            </FrameLayout>
+
+            <FrameLayout style="@style/dashboardFrame" >
+
+                <ImageView
+                    style="@style/dashboardImage"
+                    android:src="@drawable/backg_blue_normal" />
+
+                <Button
+                    android:id="@+id/btnMyAccount"
+                    style="@style/dashboardButton"
+                    android:background="@drawable/backgroud_selector_moncompte" />
+            </FrameLayout>
+
+            <FrameLayout style="@style/dashboardFrame" >
+
+                <ImageView
+                    style="@style/dashboardImage"
+                    android:src="@drawable/backg_red_normal" />
+
+                <Button
+                    android:id="@+id/btnFavorites"
+                    style="@style/dashboardButton"
+                    android:background="@drawable/backgroud_selector_favoris" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout style="@style/dashboardLayout" >
+
+            <FrameLayout style="@style/dashboardFrame" >
+
+                <ImageView
+                    style="@style/dashboardImage"
+                    android:src="@drawable/backg_green_normal" />
+
+                <Button
+                    android:id="@+id/btnChat"
+                    style="@style/dashboardButton"
+                    android:background="@drawable/backgroud_selector_chat" />
+            </FrameLayout>
+
+            <FrameLayout style="@style/dashboardFrame" >
+
+                <ImageView
+                    style="@style/dashboardImage"
+                    android:src="@drawable/backg_yellow_normal" />
+
+                <Button
+                    android:id="@+id/btnChat"
+                    style="@style/dashboardButton"
+                    android:background="@drawable/backgroud_selector_chat" />
+            </FrameLayout>
+
+            <FrameLayout style="@style/dashboardFrame" >
+
+                <ImageView
+                    style="@style/dashboardImage"
+                    android:src="@drawable/backg_green_normal" />
+
+                <Button
+                    android:id="@+id/btnChat"
+                    style="@style/dashboardButton"
+                    android:background="@drawable/backgroud_selector_chat" />
+            </FrameLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

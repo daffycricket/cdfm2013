@@ -1,0 +1,75 @@
+package com.gtanla.android.cloud;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.UUID;
+
+import com.gtanla.android.cloud.bo.Account;
+
+public class BackendClientTest {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+
+		// Set backend url
+		BackendClient.setBackendUrl("localhost:8888");
+
+		// List accounts
+		try {
+			Collection<Account> res = BackendClient.getInstance().listAccounts();
+			System.out.println(res);
+		} catch (BackendException e) {
+			e.printStackTrace();
+		}
+
+		// Create account
+		Long id = null;
+		try {
+			id = BackendClient.getInstance().createAccount(new Account("TestClientRest"));
+			System.out.println(id);
+		} catch (BackendException e) {
+			e.printStackTrace();
+		}
+
+		// Get account
+		try {
+			Account account = BackendClient.getInstance().getAccount(id);
+			System.out.println(account);
+		} catch (BackendException e) {
+			e.printStackTrace();
+		}
+
+		// Create full account
+		id = null;
+		String email = "test_" + UUID.randomUUID() + "@gmail.com";
+		String password = "toto";
+		try {
+
+			Account full = new Account(new Date(), email, "nico", "{lat=x, long=y}", "laurent", password);
+			id = BackendClient.getInstance().createAccount(full);
+
+			System.out.println(id);
+		} catch (BackendException e) {
+			e.printStackTrace();
+		}
+
+		// Get account
+		try {
+			Account account = BackendClient.getInstance().getAccount(id);
+			System.out.println(account);
+		} catch (BackendException e) {
+			e.printStackTrace();
+		}
+
+		// Check account exists
+		try {
+			Account account = BackendClient.getInstance().checkAccount(
+					"test_c2907672-7270-41e7-bad7-3404ad700353@gmail.com", "toto");
+			System.out.println(account);
+		} catch (BackendException e) {
+			e.printStackTrace();
+		}
+	}
+}

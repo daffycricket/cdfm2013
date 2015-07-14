@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<item value="523" key="RevertDialog.location.x"/>
+	<item value="459" key="DifferencesDialog.location.x"/>
+	<item value="157" key="RevertDialog.location.y"/>
+	<item value="1447" key="RevertDialog.size.x"/>
+	<item value="1014" key="RevertDialog.size.y"/>
+	<item value="704" key="ChooseUrlDialog.location.x"/>
+	<item value="328" key="HistoryTableProvider.SVNHistoryPage.Date"/>
+	<item value="166" key="ChooseUrlDialog.location.y"/>
+	<item value="544" key="DifferencesDialog.size.y"/>
+	<item value="654" key="HistoryTableProvider.SVNHistoryPage.Comment"/>
+	<item value="1003" key="DifferencesDialog.size.x"/>
+	<item value="131" key="HistoryTableProvider.SVNHistoryPage.Revision"/>
+	<item value="150" key="DifferencesDialog.location.y"/>
+	<item value="500" key="CommitDialog.weights.0"/>
+	<item value="500" key="CommitDialog.weights.1"/>
+	<item value="512" key="ChooseUrlDialog.size.x"/>
+	<item value="425" key="ChooseUrlDialog.size.y"/>
+	<item value="1003" key="MarkResolvedDialog.location.x"/>
+	<item value="341" key="MarkResolvedDialog.location.y"/>
+	<item value="261" key="HistoryTableProvider.SVNHistoryPage.Author"/>
+	<item value="trunk" key="DirectorySelectionPage.lastParent_https://cdfm2013.googlecode.com/svn"/>
+	<item value="39" key="CommitDialog.location.y"/>
+	<item value="341" key="CommitDialog.location.x"/>
+	<item value="875" key="MarkResolvedDialog.size.x"/>
+	<item value="661" key="MarkResolvedDialog.size.y"/>
+	<item value="https://cdfm2013.googlecode.com/svn" key="RepositorySelectionPage.lastRepository"/>
+	<item value="1532" key="CommitDialog.size.x"/>
+	<item value="1024" key="CommitDialog.size.y"/>
+	<section name="CommitWizard">
+		<item value="false" key="ShowCompare"/>
+		<item value="500" key="VWeight2"/>
+		<item value="500" key="VWeight1"/>
+	</section>
+	<section name="IgnoreResourcesDialog">
+		<item value="2" key="Action"/>
+	</section>
+	<section name="NewLocationWizard">
+		<list key="ConfigurationWizardMainPage.STORE_URL_ID">
+			<item value="https://cdfm2013.googlecode.com/svn"/>
+		</list>
+	</section>
+</section>

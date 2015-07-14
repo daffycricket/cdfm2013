@@ -1,0 +1,120 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/mainScrollLayout" >
+
+    <LinearLayout style="@style/mainLinearLayout" >
+
+        <!-- Activity titles - start -->
+
+        <LinearLayout style="@style/activityLinearLayout" >
+
+            <LinearLayout style="@style/activityTitleLayout" >
+
+                <TextView
+                    style="@style/activityTitle"
+                    android:text="@string/lblMyAccount" />
+
+                <View
+                    style="@style/activityBar"
+                    android:layout_width="match_parent" />
+            </LinearLayout>
+        </LinearLayout>
+        <!-- Activity titles - end -->
+
+        <Button
+            android:id="@+id/btnConnectWithFacebook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/lblBtnFacebookConnect" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/lblOr" />
+
+        <EditText
+            android:id="@+id/edtFirstName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/lblFirstName" 
+            android:text="Nico"/>
+
+        <EditText
+            android:id="@+id/edtSurName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/lblSurName" 
+            android:text="Lolo"/>
+
+        <EditText
+            android:id="@+id/edtEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/lblEmail"
+            android:inputType="textEmailAddress" 
+            android:text="nico1@gmail.com"/>
+
+        <EditText
+            android:id="@+id/edtPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/lblPassword"
+            android:inputType="textPassword" 
+            android:text="azerty"/>
+
+        <EditText
+            android:id="@+id/edtPasswordConfirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/lblConfirmPassword"
+            android:inputType="textPassword"
+            android:text="azerty"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <CheckBox
+                android:id="@+id/chkAcceptCG"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" 
+                android:checked="true"/>
+
+            <TextView
+                android:id="@+id/txtAcceptCG"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lblAcceptCG" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/btnLater"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="@string/lblBtnLater" />
+
+            <Button
+                android:id="@+id/btnYes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="@string/lblBtnYes" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

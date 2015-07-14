@@ -1,0 +1,147 @@
+<html>
+	<head>
+		<title>CdfmTeam10-backend // Gestion articles</title>
+		<link type="text/css" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" rel="stylesheet" />
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+		<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
+	    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		<link rel="shortcut icon" type="image/png" href="favicon.ico" />
+		
+		<style>
+			/** Css de placement des cadres. */
+			.centrale {position: relative; margin-left: auto; margin-right: auto; width: 1200px; z-index:3; height:100%; display:table;}
+			.errors {color: red}
+
+			#loadingMessage {display:none; position:absolute; left:0px; top:0px; width:100%; height:300%; background-color:white; z-index:5000; filter:alpha(opacity=60); opacity:0.6; -moz-opacity:0.6;}
+			#loadingMessage img {position:absolute; left:50%; top:5%; }
+
+			/** Css du tableau des scores. */
+			table { }
+			th {border:1px solid #4297D7; color:#FFFFFF; font-weight:bold; background-color:#5C9CCC}
+			td {}
+
+			/** Css surchargeant les styles JqueryUI. */
+			.ui-helper-reset {line-height:0}
+		</style>
+		
+		<!-- Add google analytics. -->
+		<script type="text/javascript">
+		
+		  var _gaq = _gaq || [];
+		  _gaq.push(['_setAccount', 'UA-45976542-1']);
+		  _gaq.push(['_trackPageview']);
+		
+		  (function() {
+		    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		  })();
+		
+		</script>
+		
+		<script>
+		
+		
+		/**
+		 * Call server to load a GameSet.
+		 * @param id The gameSet identifier.
+		 */
+		function loadArticles() {
+		
+			// get URL elements
+			var url = window.location.href;
+			var urlArray = url.split("/");
+			var protocol = urlArray[0];
+			var dns = urlArray[2];
+
+			// To use in local only - start
+			dns = "localhost:8888";
+			protocol = "http:";
+			// To use in local only - end
+
+			// Display waiting div
+			$("#loadingMessage").show();
+			
+			// Call AJAX request
+			jQuery.support.cors = true;
+			jQuery.ajax({
+				type: 'GET', dataType:"json",
+				success: onSuccessData, error: onError,
+				url: protocol + '//' + dns + '/rest/articles'
+			});
+		}
+		
+		/**
+		 * Function called on Ajax success.
+		 */
+		function onSuccessData(data, textStatus, jqXHR) {
+			$("#loadingMessage").hide();
+			
+			// Parse Json to javascript structure
+			var json = eval("(" + data + ")");
+			
+			// If data is valid
+			if (json != null && json instanceof Array) {
+				
+				// Create accordion
+				$('#accordion').html('');
+				
+				// Get accordion
+				var accordion = $('#accordion').children();
+				
+				for (i=0 ; i<json.length ; i++) {
+				
+					// Create text area
+					var editor = "<h3>" + json[i].type + "</h3>";
+					editor += "<div>";
+					editor += "<textarea id='"+json[i].id+"' />";
+					editor += "</div>";
+					accordion.append(editor);
+				}
+			}
+			
+			// If no data
+			else {
+				$(".currentGameSet").html("<span class='error'>" + json.message + "</span>")
+			}
+			
+			$( "#accordion" ).accordion();
+		}
+		
+
+		
+		/**
+		 * Function called on Ajax error.
+		 */
+		function onError (jqXHR, textStatus, errorThrown) {
+			$("#loadingMessage").hide();
+			$(".errors").html("<span class='error'>Serveur indisponible</span>")
+		}
+		
+
+		
+		/**
+		 * Function called when the page is ready.
+		 */
+		$(function() {
+						
+			// Load articles from the cloud
+			loadArticles();
+		});
+		</script>
+	</head>
+	<body>
+
+		<div id="loadingMessage">
+		    <img id="loadingMessageImg" src="./ajax-loader.gif" alt="chargement"/>
+		</div>
+		
+		<div class="errors"/>
+		
+		<div class="centrale">
+
+			<div id="accordion">
+			</div>
+		</div>
+	</body>
+</html>

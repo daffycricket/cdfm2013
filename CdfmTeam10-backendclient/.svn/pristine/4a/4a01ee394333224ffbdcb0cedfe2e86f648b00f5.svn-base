@@ -1,0 +1,77 @@
+package com.gtanla.android.cloud;
+
+import java.util.Collection;
+import java.util.UUID;
+
+import com.gtanla.android.cloud.bo.Account;
+
+public class BackendClientTest {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+
+		// Set backend url
+		BackendClient.setBackendUrl("localhost:8888");
+
+		// List accounts
+		try {
+			Collection<Account> res = BackendClient.getInstance().listAccounts();
+			System.out.println(res);
+		} catch (BackendException e) {
+			e.printStackTrace();
+		}
+
+		// Create account
+		Long id = null;
+		String email = "test_" + UUID.randomUUID() + "@gmail.com";
+		String password = "password";
+		String name = "TestClientRest";
+		String name2 = "TestClientRest2";
+		try {
+			Account storedAccount = BackendClient.getInstance().createAccount(
+					new Account("address", "city", "cp", email, name, null, "TestClientRest", password));
+			System.out.println(storedAccount);
+			id = storedAccount.getId();
+		} catch (BackendException e) {
+			e.printStackTrace();
+		}
+
+		// Get account
+		try {
+			Account account = BackendClient.getInstance().getAccount(id);
+			System.out.println(account);
+		} catch (BackendException e) {
+			e.printStackTrace();
+		}
+
+		// Check account exists
+		Account account = null;
+		try {
+			account = BackendClient.getInstance().checkAccount(email, password);
+			System.out.println(account);
+		} catch (BackendException e) {
+			e.printStackTrace();
+		}
+
+		// Update account exists
+		try {
+			account.setName(name2);
+			Account modifiedAccount = BackendClient.getInstance().update(account);
+			if (name.equals(modifiedAccount.getName())) {
+				System.err.println("Erreur : pas de modification sauvegardées");
+			}
+			modifiedAccount = BackendClient.getInstance().getAccount(account.getId());
+			if (!name2.equals(modifiedAccount.getName())) {
+				System.err.println("Erreur : pas de modification sauvegardées");
+			}
+			System.out.println(account);
+		} catch (BackendException e) {
+			e.printStackTrace();
+		}
+
+		// Log end
+		System.out.println("SUCCESS");
+	}
+}

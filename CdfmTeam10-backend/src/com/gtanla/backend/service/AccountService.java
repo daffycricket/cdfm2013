@@ -1,0 +1,198 @@
+package com.gtanla.backend.service;
+
+import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import com.gtanla.backend.bo.Account;
+import com.gtanla.backend.dao.AccountDao;
+import com.gtanla.backend.exception.BackendException;
+
+/**
+ * All account services.
+ * 
+ * @author gtalbot
+ * 
+ */
+public class AccountService {
+
+	/** Email min length. */
+	private static final int EMAIL_MIN_LENGTH = 4;
+
+	/** Error message when the object already exists. */
+	private static final String ERROR_MESSAGE_EXISTING_OBJECT = "Object already exists";
+
+	/** Error message when the object has no mail. */
+	private static final String ERROR_MESSAGE_NO_EMAIL = "Email is needed";
+
+	/** Error message when the object do not exists. */
+	private static final String ERROR_MESSAGE_NOT_EXISTING_OBJECT = "Object do not exists";
+
+	/** Logger. */
+	public static final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+
+	/**
+	 * Creates Account entity from headers.
+	 * 
+	 * @param email
+	 *            Account email
+	 * @param password
+	 *            Account password
+	 * @return Account if exists,
+	 * @throws BackendException
+	 *             backend exception
+	 */
+	public static Account checkFullAuthentication(String email, String password) throws BackendException {
+
+		Account toReturn = null;
+
+		// no auth
+		if (email == null || password == null) {
+			LOG.log(Level.SEVERE, "Authentication: email or password not provided");
+			// check auth
+		} else {
+			// check if user has proper account
+			toReturn = AccountService.getByEmail(email);
+			if (toReturn == null) {
+				LOG.log(Level.WARNING, "Authentication: No account for " + email);
+				// check if user/pws match
+			} else {
+				if (!toReturn.getPassword().equals(password)) {
+					LOG.log(Level.WARNING, "Authentication: incorrect email/password combination");
+					toReturn = null;
+				}
+			}
+		}
+
+		return toReturn;
+	}
+
+	/**
+	 * Checks whether email exists and return associated account if exists.
+	 * 
+	 * @param email
+	 * 
+	 * @return Account if exists,
+	 * @throws BackendException
+	 */
+	public static Account checkUserExistForEmail(String email) throws BackendException {
+		Account toReturn = null;
+		toReturn = AccountService.getByEmail(email);
+		return toReturn;
+	}
+
+	/**
+	 * Create an account.
+	 * 
+	 * @param account
+	 *            An account to create
+<<<<<<< .mine
+	 * @return
+	 * @throws BackendException
+=======
+	 * @return the new account
+	 * @throws BackendException
+	 *             backend exception
+>>>>>>> .r96
+	 */
+	public static Account create(Account account) throws BackendException {
+
+		// Check the object already exists
+		Account existingAccount = AccountService.getByEmail(account.getEmail());
+		if (existingAccount != null) {
+			throw new BackendException(ERROR_MESSAGE_EXISTING_OBJECT);
+		}
+
+		// Check rules
+		if (account.getEmail() == null || account.getEmail().length() < EMAIL_MIN_LENGTH) {
+			throw new BackendException(ERROR_MESSAGE_NO_EMAIL);
+		}
+
+		Account res = AccountDao.getInstance().create(account);
+		return res;
+	}
+
+	/**
+	 * Create some accounts.
+	 * 
+	 * @param accounts
+	 *            Some accounts to create
+	 * @throws BackendException
+	 *             backend exception
+	 */
+	public static void create(Collection<Account> accounts) throws BackendException {
+		if (accounts != null) {
+			for (Account account : accounts) {
+				create(account);
+			}
+		}
+	}
+
+	/**
+	 * Retrieve an account by its ID.
+	 * 
+	 * @param id
+	 *            Account identifier
+	 * @return The account instance.
+	 * @throws BackendException
+	 *             backend exception
+	 */
+	public static Account get(Long id) throws BackendException {
+		AccountDao dao = AccountDao.getInstance();
+		return dao.get(id);
+	}
+
+	/**
+	 * Retrieve an account by its email.
+	 * 
+	 * @param email
+	 *            Account email.
+	 * @return The account instance.
+	 * @throws BackendException
+	 *             backend exception
+	 */
+	public static Account getByEmail(String email) throws BackendException {
+		AccountDao dao = AccountDao.getInstance();
+		return dao.getByEmail(email);
+	}
+
+	/**
+	 * List all accounts
+	 * 
+	 * @return All stored accounts
+	 * @throws BackendException
+	 *             backend exception
+	 */
+	public static Collection<Account> listAccounts() throws BackendException {
+		AccountDao dao = AccountDao.getInstance();
+		return dao.list();
+	}
+
+	/**
+	 * Update an account.
+	 * 
+	 * @param account
+	 *            Data to store
+	 * @return The updated data
+	 * @throws BackendException
+	 *             Exception
+	 */
+	public static Account update(Account account) throws BackendException {
+
+		// Check the account exists
+		Account storedAccount = AccountService.get(account.getId());
+		if (storedAccount == null) {
+			throw new BackendException(ERROR_MESSAGE_NOT_EXISTING_OBJECT);
+		}
+
+		// Update fields
+		storedAccount.updateForModification(account);
+
+		// Store modifications
+		AccountDao dao = AccountDao.getInstance();
+		storedAccount = dao.update(storedAccount);
+
+		// return object
+		return storedAccount;
+	}
+}

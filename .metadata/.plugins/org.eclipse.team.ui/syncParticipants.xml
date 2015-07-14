@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<syncparticipants>
+<participant displayName="SVN (/CdfmTeam10-app, /google-play-services_lib, /lib-viewpageindicator, /library)" id="org.tigris.subversion.subclipse.participant" secondary_id="1385266383840">
+<data root="false">
+<org.eclipse.team.ui.TEAMSUBSRCIBERSETTINGS org.eclipse.team.ui.SCOPE_TYPE="ResourceScope">
+<org.eclipse.team.ui.TEAMSUBSRCIBER_REFRESHSCHEDULE org.eclipse.team.ui.CTX_REFRESHSCHEDULE_ENABLED="false" org.eclipse.team.ui.CTX_REFRESHSCHEDULE_INTERVAL="3600" org.eclipse.team.ui.CTX_REFRESHSCHEDULE_RUNONCE="false"/>
+<resource_scope_roots resource_scope_root_resource="/CdfmTeam10-app"/>
+<resource_scope_roots resource_scope_root_resource="/google-play-services_lib"/>
+<resource_scope_roots resource_scope_root_resource="/lib-viewpageindicator"/>
+<resource_scope_roots resource_scope_root_resource="/library"/>
+</org.eclipse.team.ui.TEAMSUBSRCIBERSETTINGS>
+</data>
+</participant>
+</syncparticipants>

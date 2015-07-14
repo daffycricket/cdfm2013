@@ -1,0 +1,299 @@
+package com.gtanla.android;
+
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.analytics.tracking.android.EasyTracker;
+import com.gtanla.android.cloud.bo.Account;
+import com.gtanla.android.task.GetAccountTask;
+import com.gtanla.android.task.IAsyncCallback;
+import com.gtanla.android.task.UpdateAccountTask;
+import com.gtanla.android.utils.PreferenceConstants;
+
+/**
+ * Activity for page C5.2 and C5.2.2
+ * 
+ * @author gtalbot
+ * 
+ */
+public class AccountDetailActivity extends Activity {
+
+	/** current account. */
+	private Account mAccount;
+
+	/** Waiting div. */
+	private ProgressDialog mProgressDialog;
+
+	/** Activity state. */
+	private boolean mStateModification;
+
+	/** Call back after account creation. */
+	private final IAsyncCallback<Object> onAccountReceivedCallback = new IAsyncCallback<Object>() {
+
+		/**
+		 * Method call after account creation. The parameter must be the Account identifier
+		 * 
+		 * @param object
+		 */
+		@Override
+		public void execute(Object object) {
+			onAccountReceived(object);
+		}
+	};
+
+	/** Call back after account creation. */
+	private final IAsyncCallback<Object> onAccountUpdatedCallback = new IAsyncCallback<Object>() {
+
+		/**
+		 * Method call after account creation. The parameter must be the Account identifier
+		 * 
+		 * @param object
+		 */
+		@Override
+		public void execute(Object object) {
+			onAccountUpdated();
+		}
+	};
+
+	/**
+	 * Call update task
+	 */
+	private void callUpdateAccount() {
+
+		// Display waiting div
+		this.mProgressDialog.show();
+
+		// Get inputs
+		EditText edtFirstName = ((EditText) this.findViewById(R.id.edtFirstName));
+		EditText edtSurName = ((EditText) this.findViewById(R.id.edtSurName));
+		EditText edtAddressCity = ((EditText) this.findViewById(R.id.edtAddressCity));
+		EditText edtAddressLine = ((EditText) this.findViewById(R.id.edtAddressLine));
+		EditText edtAddressZipCode = ((EditText) this.findViewById(R.id.edtAddressZipCode));
+
+		// Read form data
+		this.mAccount.setAddress(edtAddressLine.getText().toString());
+		this.mAccount.setCity(edtAddressCity.getText().toString());
+		this.mAccount.setCp(edtAddressZipCode.getText().toString());
+		this.mAccount.setFirstName(edtFirstName.getText().toString());
+		this.mAccount.setName(edtSurName.getText().toString());
+
+		// Load account
+		UpdateAccountTask task = new UpdateAccountTask(onAccountUpdatedCallback, this.mAccount);
+		task.execute();
+
+	}
+
+	/**
+	 * Called after account creation.
+	 * 
+	 * @param object
+	 */
+	private void onAccountReceived(Object object) {
+		// Check parameter
+		if (object == null || Exception.class.isInstance(object)) {
+
+			// Get default error message
+			String errorMessageAccountCreationError = this.getResources()
+					.getText(R.string.errorMessageAccountReceivedError).toString();
+
+			// Append specific message
+			if (object != null) {
+				errorMessageAccountCreationError += ((Exception) object).getMessage();
+			}
+
+			// Display error
+			Toast.makeText(AccountDetailActivity.this, errorMessageAccountCreationError, Toast.LENGTH_LONG).show();
+
+			// Close activity
+			this.finish();
+
+		} else {
+			// Update the form
+			this.updateForm(false, (Account) object);
+		}
+
+		// If validation errors, close progressBar
+		if (this.mProgressDialog.isShowing()) {
+			this.mProgressDialog.dismiss();
+		}
+
+	}
+
+	/**
+	 * Method called after the account has been updated
+	 */
+	private void onAccountUpdated() {
+		// Update the form
+		updateForm(false, null);
+
+		// If validation errors, close progressBar
+		if (AccountDetailActivity.this.mProgressDialog.isShowing()) {
+			AccountDetailActivity.this.mProgressDialog.dismiss();
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_account_detail);
+
+		// Display waiting div
+		String message = this.getResources().getText(R.string.waitMessage).toString();
+		this.mProgressDialog = ProgressDialog.show(this, message, message, false);
+
+		// Get id
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+		Long id = preferences.getLong(PreferenceConstants.ACCOUNT_ID, 0L);
+
+		// Load account
+		GetAccountTask task = new GetAccountTask(onAccountReceivedCallback, id);
+		task.execute();
+
+		// Set listener for MODIFY button
+		Button btnModify = (Button) this.findViewById(R.id.btnModify);
+		btnModify.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				AccountDetailActivity.this.onModifyButtonClick();
+			}
+		});
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	/**
+	 * Method called when the user click on MODIFY button.
+	 */
+	private void onModifyButtonClick() {
+		if (AccountDetailActivity.this.mStateModification) {
+			// If the button is in state (stateModification==true), save modification !
+			callUpdateAccount();
+		} else {
+			// If the button is in state (stateModification==false), switch state
+			this.updateForm(!AccountDetailActivity.this.mStateModification, null);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onStart()
+	 */
+	@Override
+	public void onStart() {
+		super.onStart();
+
+		// Notify Google analytics tracker
+		EasyTracker.getInstance(this).activityStart(this);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onStop()
+	 */
+	@Override
+	public void onStop() {
+		super.onStop();
+
+		// Notify Google analytics tracker
+		EasyTracker.getInstance(this).activityStop(this);
+	}
+
+	/**
+	 * Set an input with the value or set it blank if value is empty
+	 * 
+	 * @param edt
+	 *            Input to set
+	 * @param value
+	 *            value to use
+	 */
+	private void setEditText(EditText edt, String value) {
+		if (value == null || value.length() == 0) {
+			if (edt.isEnabled()) {
+				// to remove the blank string
+				edt.setText("");
+			} else {
+				// to hide HINT
+				edt.setText(" ");
+			}
+		} else {
+			edt.setText(value);
+		}
+	}
+
+	/**
+	 * Called after account creation.
+	 * 
+	 * @param newStatus
+	 * @param account
+	 */
+	private void updateForm(boolean newStatus, Account account) {
+
+		// Store account
+		if (account != null) {
+			this.mAccount = account;
+		}
+
+		// Switch value
+		this.mStateModification = newStatus;
+
+		// Get inputs
+		EditText edtFirstName = ((EditText) this.findViewById(R.id.edtFirstName));
+		EditText edtSurName = ((EditText) this.findViewById(R.id.edtSurName));
+		EditText edtEmail = ((EditText) this.findViewById(R.id.edtEmail));
+		EditText edtAddressCity = ((EditText) this.findViewById(R.id.edtAddressCity));
+		EditText edtAddressLine = ((EditText) this.findViewById(R.id.edtAddressLine));
+		EditText edtAddressZipCode = ((EditText) this.findViewById(R.id.edtAddressZipCode));
+
+		// Update inputs state
+		edtFirstName.setEnabled(mStateModification);
+		edtSurName.setEnabled(mStateModification);
+		edtEmail.setEnabled(false);
+		edtAddressCity.setEnabled(mStateModification);
+		edtAddressLine.setEnabled(mStateModification);
+		edtAddressZipCode.setEnabled(mStateModification);
+
+		// Init form
+		if (this.mAccount != null) {
+			this.setEditText(edtFirstName, this.mAccount.getFirstName());
+			this.setEditText(edtSurName, this.mAccount.getName());
+			this.setEditText(edtEmail, this.mAccount.getEmail());
+			this.setEditText(edtAddressCity, this.mAccount.getCity());
+			this.setEditText(edtAddressLine, this.mAccount.getAddress());
+			this.setEditText(edtAddressZipCode, this.mAccount.getCp());
+		}
+
+		// Update button label
+		if (this.mStateModification) {
+			((Button) this.findViewById(R.id.btnModify)).setText(this.getResources().getText(R.string.lblSave));
+		} else {
+			((Button) this.findViewById(R.id.btnModify)).setText(this.getResources().getText(R.string.lblModify));
+		}
+
+	}
+}

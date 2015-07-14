@@ -1,0 +1,156 @@
+package com.gtanla.backend.resources;
+
+import java.io.IOException;
+import java.util.Collection;
+import java.util.logging.Level;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+
+import com.google.gson.Gson;
+import com.gtanla.backend.bo.Account;
+import com.gtanla.backend.service.AccountService;
+
+/**
+ * Entity resource mapped to path /accounts
+ */
+@Path("/accounts")
+public class AccountResource {
+
+	/** HTTP status code : 401. */
+	private static final int STATUS_CODE_FORBIDDEN = 401;
+
+	/** HTTP status code : 500. */
+	private static final int STATUS_CODE_SERVER_ERROR = 500;
+
+	/**
+	 * Allows to insert http headers into the class.
+	 */
+	@Context
+	private HttpHeaders headers;
+
+	/**
+	 * Allows to insert UriInfo into the class.
+	 */
+	@Context
+	private UriInfo uriInfo;
+
+	@GET
+	@Path("check")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response checkAccountExists() {
+		// Prepare response
+		Response response = null;
+
+		try {
+			// list accounts
+			Account account = AccountService.checkFullAuthentication(headers);
+			if (account != null) {
+				response = Response.ok((new Gson()).toJson(account)).build();
+			} else {
+				response = Response.status(STATUS_CODE_FORBIDDEN).build();
+			}
+
+			// Serialize
+
+		} catch (Exception e) {
+			AccountService.LOG.log(Level.SEVERE, e.getMessage(), e);
+			response = Response.status(STATUS_CODE_SERVER_ERROR).entity(e.toString()).build();
+		}
+
+		return response;
+	}
+
+	/**
+	 * List all accounts
+	 * 
+	 * @return All accounts as a Json object.
+	 */
+	@GET
+	@Path("{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getByid(@PathParam("id") String id) {
+
+		// Prepare response
+		Response response = null;
+
+		try {
+			// list accounts
+			Account account = AccountService.get(Long.decode(id));
+
+			// Serialize
+			response = Response.ok((new Gson()).toJson(account)).build();
+
+		} catch (Exception e) {
+			AccountService.LOG.log(Level.SEVERE, e.getMessage(), e);
+			response = Response.status(STATUS_CODE_SERVER_ERROR).entity(e.toString()).build();
+		}
+
+		return response;
+	}
+
+	/**
+	 * List all accounts
+	 * 
+	 * @return All account as a Json object.
+	 */
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response list() {
+
+		// Prepare response
+		Response response = null;
+
+		try {
+			// list accounts
+			Collection<Account> accounts = AccountService.listAccounts();
+
+			// Serialize
+			response = Response.ok((new Gson()).toJson(accounts)).build();
+
+		} catch (Exception e) {
+			AccountService.LOG.log(Level.SEVERE, e.getMessage(), e);
+			response = Response.status(STATUS_CODE_SERVER_ERROR).entity(e.toString()).build();
+		}
+
+		return response;
+	}
+
+	/**
+	 * Creates a new account.
+	 * 
+	 * @param request
+	 *            The JSON request
+	 * @return A Response containing the newly created Account as a Json object.
+	 * @throws IOException
+	 */
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response registerAccount(String request) throws IOException {
+
+		try {
+			// Retrieve entity from request
+			Account account = (new Gson()).fromJson(request, Account.class);
+
+			// Create the account
+			Account res = AccountService.create(account);
+
+			// Return the identifier
+			String jsonResult = (new Gson()).toJson(res);
+			return Response.ok(jsonResult).build();
+
+		} catch (Exception e) {
+			AccountService.LOG.log(Level.SEVERE, e.getMessage(), e);
+			return Response.status(STATUS_CODE_SERVER_ERROR).entity(e.toString()).build();
+		}
+	}
+}

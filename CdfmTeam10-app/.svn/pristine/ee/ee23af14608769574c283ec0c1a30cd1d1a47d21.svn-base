@@ -1,0 +1,46 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <!-- Activity titles - start -->
+
+    <LinearLayout style="@style/activityLinearLayout" >
+
+        <LinearLayout style="@style/activityTitleLayout" >
+
+            <TextView
+                style="@style/activityTitle"
+                android:text="@string/lblTouch" />
+
+            <View
+                style="@style/activityBar"
+                android:layout_width="match_parent" />
+        </LinearLayout>
+    </LinearLayout>
+    <!-- Activity titles - end -->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lblLastSubscribers" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TODO CAROUSEL..." />
+
+    <Button
+        android:id="@+id/btnAroundMe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lblAroundMe" />
+
+    <Button
+        android:id="@+id/btnAnyWhere"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lblAnywhere" />
+
+</LinearLayout>

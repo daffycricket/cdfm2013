@@ -1,0 +1,195 @@
+package com.gtanla.android;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import android.app.ActionBar;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+
+import com.viewpagerindicator.PageIndicator;
+import com.viewpagerindicator.TitlePageIndicator;
+import com.viewpagerindicator.TitlePageIndicator.IndicatorStyle;
+
+/**
+ * Handles touch pager : user map, user list...
+ * 
+ * @author Nico
+ * 
+ */
+public class TouchFragmentActivity extends FragmentActivity {
+
+	/**
+	 * Custom pager adapter.
+	 * 
+	 * @author Nico
+	 * 
+	 */
+	public class TouchPagerAdapter extends FragmentPagerAdapter {
+
+		/**
+		 * The list of fragments to display.
+		 */
+		private final List<Fragment> fragments;
+
+		/**
+		 * @param fm
+		 * @param fragments
+		 */
+		public TouchPagerAdapter(FragmentManager fm, List<Fragment> fragments) {
+			super(fm);
+			this.fragments = fragments;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see android.support.v4.view.PagerAdapter#getCount()
+		 */
+		@Override
+		public int getCount() {
+			return this.fragments.size();
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see android.support.v4.app.FragmentPagerAdapter#getItem(int)
+		 */
+		@Override
+		public Fragment getItem(int position) {
+			return this.fragments.get(position);
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see android.support.v4.view.PagerAdapter#getPageTitle(int)
+		 */
+		@Override
+		public CharSequence getPageTitle(int position) {
+			int idLabel = 0;
+			switch (position) {
+			case 0:
+				idLabel = R.string.lblFilterTitle;
+				break;
+			case 1:
+				idLabel = R.string.lblListTitle;
+				break;
+			case 2:
+				idLabel = R.string.lblMapTitle;
+				break;
+			case 3:
+				idLabel = R.string.lblRefreshTitle;
+				break;
+			default:
+				return "Aouch...";
+
+			}
+			return getString(idLabel);
+		}
+	}
+
+	/**
+	 * Index of current fragment displayed.
+	 */
+	private int currentPosition;
+
+	/**
+	 * The action bar.
+	 */
+	private ActionBar mActionBar;
+
+	/**
+	 * Pager indicator.
+	 */
+	private PageIndicator mIndicator;
+
+	/**
+	 * Game view pager.
+	 */
+	private ViewPager mPager;
+
+	/**
+	 * Fragment pager adapter.
+	 */
+	private PagerAdapter mPagerAdapter;
+
+	/**
+	 * Initialises the pager.
+	 */
+	private void initialisePaging() {
+		List<Fragment> fragments = new ArrayList<Fragment>();
+
+		fragments.add(TouchFilterFragment.newInstance());
+		fragments.add(TouchMapFragment.newInstance());
+		fragments.add(TouchFilterFragment.newInstance());
+		fragments.add(TouchFilterFragment.newInstance());
+
+		this.mPagerAdapter = new TouchPagerAdapter(super.getSupportFragmentManager(), fragments);
+
+		this.mPager = (ViewPager) super.findViewById(R.id.pager);
+		this.mPager.setAdapter(this.mPagerAdapter);
+		this.mPager.setCurrentItem(1);
+
+		TitlePageIndicator indicator = (TitlePageIndicator) findViewById(R.id.indicator);
+		indicator.setViewPager(mPager);
+		indicator.setFooterIndicatorStyle(IndicatorStyle.Triangle);
+		mIndicator = indicator;
+
+		// We set this on the indicator, NOT the pager
+		mIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see android.support.v4.view.ViewPager.OnPageChangeListener#onPageScrolled(int, float, int)
+			 */
+			@Override
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+			}
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see android.support.v4.view.ViewPager.OnPageChangeListener#onPageScrollStateChanged(int)
+			 */
+			@Override
+			public void onPageScrollStateChanged(int state) {
+			}
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see android.support.v4.view.ViewPager.OnPageChangeListener#onPageSelected(int)
+			 */
+			@Override
+			public void onPageSelected(int position) {
+				currentPosition = position + 1;
+			}
+		});
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.support.v4.app.FragmentActivity#onCreate(android.os.Bundle)
+	 */
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.touch_titles);
+
+		// initialize the pager
+		initialisePaging();
+
+		mActionBar = getActionBar();
+		mActionBar.setHomeButtonEnabled(true);
+		mActionBar.setDisplayShowHomeEnabled(true);
+	}
+}

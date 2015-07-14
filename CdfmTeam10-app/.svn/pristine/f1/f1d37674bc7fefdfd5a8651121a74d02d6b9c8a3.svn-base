@@ -1,0 +1,86 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/mainScrollLayout" >
+
+    <LinearLayout style="@style/mainLinearLayout" >
+
+        <!-- Activity titles - start -->
+
+        <LinearLayout style="@style/activityLinearLayout" >
+
+            <LinearLayout style="@style/activityTitleLayout" >
+
+                <TextView
+                    style="@style/activityTitle"
+                    android:text="@string/lblMyAccount" />
+
+                <View
+                    style="@style/activityBar"
+                    android:layout_width="match_parent" />
+            </LinearLayout>
+        </LinearLayout>
+        <!-- Activity titles - end -->
+
+        <Button
+            android:id="@+id/btnConnectWithFacebook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/lblBtnFacebookConnect" />
+
+        <EditText
+            android:id="@+id/edtEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/lblEmail"
+            android:inputType="textEmailAddress"
+            android:text="talbotgui@gmail.com" />
+
+        <EditText
+            android:id="@+id/edtPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/lblPassword"
+            android:inputType="textPassword"
+            android:text="azer" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lblLostPassword" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/btnCreateAccount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lblBtnCreateAccount" />
+
+            <Button
+                android:id="@+id/btnConnect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lblBtnConnect" />
+
+            <Button
+                android:id="@+id/btnLater"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lblBtnLater" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txtAcceptCG"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lblYouAcceptCGIfYouUseApp" />
+    </LinearLayout>
+
+</ScrollView>

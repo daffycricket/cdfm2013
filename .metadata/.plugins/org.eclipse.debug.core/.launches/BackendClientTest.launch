@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/CdfmTeam10-backendclient/src/com/gtanla/android/cloud/BackendClientTest.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.gtanla.android.cloud.BackendClientTest"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="CdfmTeam10-backendclient"/>
+</launchConfiguration>

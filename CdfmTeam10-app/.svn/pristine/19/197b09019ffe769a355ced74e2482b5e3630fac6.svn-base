@@ -1,0 +1,113 @@
+package com.gtanla.android;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.gtanla.android.utils.Constants;
+
+/**
+ * This activity is page C.
+ * 
+ * @author gtalbot
+ * 
+ */
+public class TouchActivity extends Activity {
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_touch);
+
+		// track
+		EasyTracker.getInstance(this).send(MapBuilder.createAppView().set(Fields.SCREEN_NAME, "TouchScreen").build());
+
+		// Enable HOME button
+		this.getActionBar().setDisplayHomeAsUpEnabled(true);
+
+		// Add listener on AroundMe button
+		Button btnAroundMe = (Button) this.findViewById(R.id.btnAroundMe);
+		btnAroundMe.setOnClickListener(new OnClickListener() {
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see android.view.View.OnClickListener#onClick(android.view.View)
+			 */
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(TouchActivity.this, TouchFragmentActivity.class);
+				intent.putExtra(Constants.PARAM_VIEW_TYPE, Constants.VIEW_TYPE_AROUND);
+				TouchActivity.this.startActivity(intent);
+				TouchActivity.this.finish();
+			}
+		});
+
+		// Add listener on AnyWhere button
+		Button btnAnyWhere = (Button) this.findViewById(R.id.btnAnyWhere);
+		btnAnyWhere.setOnClickListener(new OnClickListener() {
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see android.view.View.OnClickListener#onClick(android.view.View)
+			 */
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(TouchActivity.this, TouchFragmentActivity.class);
+				intent.putExtra(Constants.PARAM_VIEW_TYPE, Constants.VIEW_TYPE_ANYWHERE);
+				TouchActivity.this.startActivity(intent);
+				TouchActivity.this.finish();
+			}
+		});
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onStart()
+	 */
+	@Override
+	public void onStart() {
+		super.onStart();
+
+		// Notify Google analytics tracker
+		EasyTracker.getInstance(this).activityStart(this);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onStop()
+	 */
+	@Override
+	public void onStop() {
+		super.onStop();
+
+		// Notify Google analytics tracker
+		EasyTracker.getInstance(this).activityStop(this);
+	}
+}

@@ -1,0 +1,260 @@
+package com.gtanla.android.cloud;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.text.MessageFormat;
+import java.util.Collection;
+import java.util.List;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.gtanla.android.cloud.bo.Account;
+
+public class BackendClient {
+
+	/** Gson type for List<Account>. */
+	private static final TypeToken<List<Account>> ACCOUNT_LIST_TYPE = new TypeToken<List<Account>>() {
+	};
+
+	/** Backend url. */
+	private static String backendUrl;
+
+	/** Instance. */
+	private static BackendClient instance;
+
+	/** Encoding type UTF8. */
+	private static final String UTF_8 = "UTF-8";
+
+	/**
+	 * Get instance.
+	 * 
+	 * @return
+	 */
+	public static BackendClient getInstance() {
+		if (instance == null) {
+			instance = new BackendClient();
+		}
+		return instance;
+	}
+
+	/**
+	 * Set backend server name
+	 * 
+	 * @param value
+	 *            backend server name
+	 * 
+	 */
+	public static void setBackendUrl(String value) {
+		backendUrl = value;
+	}
+
+	/** HTTP client. */
+	private final DefaultHttpClient client;
+
+	/**
+	 * Constructor.
+	 */
+	private BackendClient() {
+
+		// Set HTTP client parameters
+		client = new DefaultHttpClient();
+		HttpParams httpParams = new BasicHttpParams();
+		HttpProtocolParams.setContentCharset(httpParams, UTF_8);
+		client.setParams(httpParams);
+	}
+
+	/**
+	 * Get account by its identifier.
+	 * 
+	 * @param email
+	 *            Account email
+	 * @param password
+	 *            Account password
+	 * @return true if account exists
+	 */
+	public Account checkAccount(String email, String password) throws BackendException {
+		try {
+			// Prepare request
+			HttpGet request = createNewHttpGet("/rest/accounts/check");
+			request.addHeader("Cookie", MessageFormat.format("EMAIL={0}; PASSWORD={1}", email, password));
+
+			// execute request
+			HttpResponse response = client.execute(request);
+
+			// Check http status code
+			checkHttpResponseStatus(response);
+
+			// Parse json results
+			Gson gson = new Gson();
+			Account account = gson.fromJson(new InputStreamReader(response.getEntity().getContent()), Account.class);
+
+			// Return result
+			return account;
+
+		} catch (ClientProtocolException e) {
+			throw new BackendException(e);
+		} catch (IOException e) {
+			throw new BackendException(e);
+		}
+	}
+
+	/**
+	 * Check http status code in response. If not 200, throw an exception.
+	 * 
+	 * @param response
+	 *            HTTP response
+	 * @throws BackendException
+	 */
+	private void checkHttpResponseStatus(HttpResponse response) throws BackendException {
+		if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+			throw new BackendException("Error during cloud call : " + response.getStatusLine().getStatusCode());
+		}
+	}
+
+	/**
+	 * @param account
+	 *            An account to create
+	 * @return The account identifier
+	 * @throws BackendException
+	 *             A backend exception
+	 */
+	public Account createAccount(Account account) throws BackendException {
+
+		try {
+			// Prepare data to send
+			Gson gson = new Gson();
+			String data = gson.toJson(account);
+
+			// Prepare request
+			HttpPost request = createNewHttpPost("/rest/accounts");
+			request.setEntity(new StringEntity(data));
+
+			// Execute request
+			HttpResponse response = client.execute(request);
+
+			// Check http status code
+			checkHttpResponseStatus(response);
+
+			// Parse json results
+			Gson gsonResponse = new Gson();
+			Account res = gsonResponse
+					.fromJson(new InputStreamReader(response.getEntity().getContent()), Account.class);
+
+			// Return result
+			return res;
+
+		} catch (UnsupportedEncodingException e) {
+			throw new BackendException(e);
+		} catch (ClientProtocolException e) {
+			throw new BackendException(e);
+		} catch (IOException e) {
+			throw new BackendException(e);
+		}
+	}
+
+	/**
+	 * Create a new GET request
+	 * 
+	 * @param uri
+	 *            URI
+	 * @return a GET request
+	 */
+	private HttpGet createNewHttpGet(String uri) {
+		HttpGet request = new HttpGet("http://" + backendUrl + uri);
+		request.setHeader("Content-type", "application/json; charset=UTF-8");
+		request.setHeader("Accept-Language", "fr-FR");
+		return request;
+	}
+
+	/**
+	 * Create a new GET request
+	 * 
+	 * @param uri
+	 *            URI
+	 * @return a GET request
+	 * @throws BackendException
+	 *             A backend exception
+	 */
+	private HttpPost createNewHttpPost(String uri) {
+		HttpPost request = new HttpPost("http://" + backendUrl + uri);
+		request.setHeader("Content-type", "application/json; charset=UTF-8");
+		request.setHeader("Accept-Language", "fr-FR");
+		return request;
+	}
+
+	/**
+	 * Get account by its identifier.
+	 * 
+	 * @param id
+	 *            Account identifier
+	 * @return
+	 */
+	public Account getAccount(Long id) throws BackendException {
+		try {
+			// Prepare request
+			HttpGet request = createNewHttpGet("/rest/accounts/" + id);
+
+			// execute request
+			HttpResponse response = client.execute(request);
+
+			// Check http status code
+			checkHttpResponseStatus(response);
+
+			// Parse json results
+			Gson gson = new Gson();
+			Account account = gson.fromJson(new InputStreamReader(response.getEntity().getContent()), Account.class);
+
+			// Return result
+			return account;
+
+		} catch (ClientProtocolException e) {
+			throw new BackendException(e);
+		} catch (IOException e) {
+			throw new BackendException(e);
+		}
+	}
+
+	/**
+	 * List all accounts
+	 * 
+	 * @return
+	 */
+	public Collection<Account> listAccounts() throws BackendException {
+
+		try {
+			// Prepare request
+			HttpGet request = createNewHttpGet("/rest/accounts");
+
+			// execute request
+			HttpResponse response = client.execute(request);
+
+			// Check http status code
+			checkHttpResponseStatus(response);
+
+			// Parse json results
+			Gson gson = new Gson();
+			List<Account> accounts = gson.fromJson(new InputStreamReader(response.getEntity().getContent()),
+					ACCOUNT_LIST_TYPE.getType());
+
+			// Return result
+			return accounts;
+
+		} catch (ClientProtocolException e) {
+			throw new BackendException(e);
+		} catch (IOException e) {
+			throw new BackendException(e);
+		}
+	}
+}

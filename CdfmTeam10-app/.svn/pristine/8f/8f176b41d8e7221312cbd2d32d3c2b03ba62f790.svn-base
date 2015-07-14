@@ -1,0 +1,93 @@
+package com.gtanla.android.utils;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
+
+import com.gtanla.android.R;
+import com.gtanla.android.SigninActivity;
+
+/**
+ * Utility class to validate input
+ * 
+ * @author gtalbot
+ * 
+ */
+public class ConnexionUtils {
+
+	/**
+	 * 
+	 * Add the disconnect button in top of the activity
+	 * 
+	 * @param act
+	 *            Current activity
+	 * @param menu
+	 *            Menu
+	 */
+	public static void addDisconnectButton(final Activity act, Menu menu) {
+
+		// if the user is connected
+		if (ConnexionUtils.isConnected(act)) {
+
+			// Get button label
+			String label = act.getResources().getText(R.string.disconnect).toString();
+
+			// Create the menu item
+			MenuItem miExportDB = menu.add(label);
+			miExportDB.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			miExportDB.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+				/*
+				 * (non-Javadoc)
+				 * 
+				 * @see android.view.MenuItem.OnMenuItemClickListener#onMenuItemClick(android.view.MenuItem)
+				 */
+				@Override
+				public boolean onMenuItemClick(MenuItem item) {
+
+					// Disconnect user
+					ConnexionUtils.disconnect(act);
+
+					return true;
+				}
+			});
+		}
+
+	}
+
+	/**
+	 * Disconnect the user
+	 * 
+	 * @param act
+	 *            Activity
+	 */
+	public static void disconnect(Activity act) {
+
+		// Clear preferences
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(act);
+		SharedPreferences.Editor editor = preferences.edit();
+		editor.clear();
+		editor.commit();
+
+		// Start connexion activity
+		Intent intent = new Intent(act, SigninActivity.class);
+		act.startActivity(intent);
+		act.finish();
+	}
+
+	/**
+	 * Check the user is connected.
+	 * 
+	 * @param act
+	 *            Activity
+	 * @return The user connexion status
+	 */
+	public static boolean isConnected(Activity act) {
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(act);
+		return preferences.getLong(PreferenceConstants.ACCOUNT_ID, 0L) != 0;
+	}
+}

@@ -1,0 +1,78 @@
+package com.gtanla.android;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+
+import com.google.analytics.tracking.android.EasyTracker;
+
+public class MainDashboardActivity extends Activity {
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main_dashboard);
+
+		Button btnMyAccount = (Button) this.findViewById(R.id.btnMyAccount);
+		btnMyAccount.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(MainDashboardActivity.this, AccountDashboardActivity.class);
+				MainDashboardActivity.this.startActivity(intent);
+			}
+		});
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
+
+		MenuItem miExportDB = menu.add("Disconnect");
+		miExportDB.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		miExportDB.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+
+				SharedPreferences preferences = PreferenceManager
+						.getDefaultSharedPreferences(MainDashboardActivity.this);
+				SharedPreferences.Editor editor = preferences.edit();
+				editor.clear();
+				editor.commit();
+
+				Intent intent = new Intent(MainDashboardActivity.this, SigninActivity.class);
+				MainDashboardActivity.this.startActivity(intent);
+				MainDashboardActivity.this.finish();
+
+				return true;
+			}
+		});
+
+		return true;
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		EasyTracker.getInstance(this).activityStart(this);
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		EasyTracker.getInstance(this).activityStop(this);
+	}
+}

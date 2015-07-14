@@ -1,0 +1,266 @@
+package com.gtanla.android;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import android.app.ActionBar;
+import android.app.ProgressDialog;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.widget.Toast;
+
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.gtanla.android.app.App;
+import com.gtanla.android.cloud.bo.Account;
+import com.gtanla.android.task.GetAccountsTask;
+import com.gtanla.android.task.IAsyncCallback;
+import com.viewpagerindicator.PageIndicator;
+import com.viewpagerindicator.TitlePageIndicator;
+import com.viewpagerindicator.TitlePageIndicator.IndicatorStyle;
+
+/**
+ * Handles touch pager : user map, user list...
+ * 
+ * @author Nico
+ * 
+ */
+public class TouchFragmentActivity extends FragmentActivity {
+
+	/**
+	 * Custom pager adapter.
+	 * 
+	 * @author Nico
+	 * 
+	 */
+	public class TouchPagerAdapter extends FragmentPagerAdapter {
+
+		/**
+		 * The list of fragments to display.
+		 */
+		private final List<Fragment> fragments;
+
+		/**
+		 * @param fm
+		 * @param fragments
+		 */
+		public TouchPagerAdapter(FragmentManager fm, List<Fragment> fragments) {
+			super(fm);
+			this.fragments = fragments;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see android.support.v4.view.PagerAdapter#getCount()
+		 */
+		@Override
+		public int getCount() {
+			return this.fragments.size();
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see android.support.v4.app.FragmentPagerAdapter#getItem(int)
+		 */
+		@Override
+		public Fragment getItem(int position) {
+			return this.fragments.get(position);
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see android.support.v4.view.PagerAdapter#getPageTitle(int)
+		 */
+		@Override
+		public CharSequence getPageTitle(int position) {
+			int idLabel = 0;
+			switch (position) {
+			case 0:
+				idLabel = R.string.lblFilterTitle;
+				break;
+			case 1:
+				idLabel = R.string.lblListTitle;
+				break;
+			case 2:
+				idLabel = R.string.lblMapTitle;
+				break;
+			case 3:
+				idLabel = R.string.lblRefreshTitle;
+				break;
+			default:
+				return "Aouch...";
+
+			}
+			return getString(idLabel);
+		}
+	}
+
+	/** 0x value for BLACK. */
+	private static final int COLOR_BLACK = 0xFF000000;
+
+	/**
+	 * Index of current fragment displayed.
+	 */
+	private int currentPosition;
+
+	/**
+	 * The action bar.
+	 */
+	private ActionBar mActionBar;
+
+	/**
+	 * Pager indicator.
+	 */
+	private PageIndicator mIndicator;
+
+	/**
+	 * Game view pager.
+	 */
+	private ViewPager mPager;
+
+	/**
+	 * Fragment pager adapter.
+	 */
+	private PagerAdapter mPagerAdapter;
+
+	/**
+	 * Busy indicator.
+	 */
+	private ProgressDialog mProgressDialog;
+
+	/**
+	 * Callback for the retrieval of accounts.
+	 */
+	private final IAsyncCallback<Object> onAccountsRetrievedCallback = new IAsyncCallback<Object>() {
+
+		@Override
+		public void execute(Object result) {
+			onAccountsRetrieved(result);
+		}
+	};
+
+	/**
+	 * Initialises the pager.
+	 */
+	private void initialisePaging() {
+		List<Fragment> fragments = new ArrayList<Fragment>();
+
+		fragments.add(TouchMapFragment.newInstance());
+		fragments.add(TouchListFragment.newInstance());
+
+		this.mPagerAdapter = new TouchPagerAdapter(super.getSupportFragmentManager(), fragments);
+
+		this.mPager = (ViewPager) super.findViewById(R.id.pager);
+		this.mPager.setAdapter(this.mPagerAdapter);
+		this.mPager.setCurrentItem(1);
+
+		TitlePageIndicator mIndicator = (TitlePageIndicator) findViewById(R.id.indicator);
+		mIndicator.setViewPager(mPager);
+		mIndicator.setFooterIndicatorStyle(IndicatorStyle.Triangle);
+		mIndicator.setTextColor(COLOR_BLACK);
+		mIndicator.setSelectedColor(COLOR_BLACK);
+
+		// We set this on the indicator, NOT the pager
+		mIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see android.support.v4.view.ViewPager.OnPageChangeListener#onPageScrolled(int, float, int)
+			 */
+			@Override
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+			}
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see android.support.v4.view.ViewPager.OnPageChangeListener#onPageScrollStateChanged(int)
+			 */
+			@Override
+			public void onPageScrollStateChanged(int state) {
+			}
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see android.support.v4.view.ViewPager.OnPageChangeListener#onPageSelected(int)
+			 */
+			@Override
+			public void onPageSelected(int position) {
+				currentPosition = position + 1;
+			}
+		});
+	}
+
+	/**
+	 * Handles actions post account retrieval.
+	 * 
+	 * @param result
+	 */
+	@SuppressWarnings("unchecked")
+	private void onAccountsRetrieved(Object result) {
+
+		// Hide waiting div
+		if (mProgressDialog.isShowing()) {
+			mProgressDialog.dismiss();
+		}
+
+		// handle result
+		if (result == null || Exception.class.isInstance(result)) {
+
+			// Get default error message
+			String errorMessageAccountCreationError = getResources().getText(R.string.errorMessageListAccountsError)
+					.toString();
+
+			// Append specific message
+			if (result != null) {
+				errorMessageAccountCreationError += ((Exception) result).getMessage();
+			}
+
+			// Display error
+			Toast.makeText(this, errorMessageAccountCreationError, Toast.LENGTH_LONG).show();
+
+			// End
+			return;
+		} else {
+			App.getInstance().setAccounts((Collection<Account>) result);
+			initialisePaging();
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.support.v4.app.FragmentActivity#onCreate(android.os.Bundle)
+	 */
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.touch_titles);
+
+		// track
+		EasyTracker.getInstance(this).send(
+				MapBuilder.createAppView().set(Fields.SCREEN_NAME, "TouchMultiScreen").build());
+
+		String message = getResources().getText(R.string.waitMessage).toString();
+		mProgressDialog = ProgressDialog.show(this, message, message, false);
+
+		GetAccountsTask task = new GetAccountsTask(onAccountsRetrievedCallback);
+		task.execute();
+
+		mActionBar = getActionBar();
+		mActionBar.setHomeButtonEnabled(true);
+		mActionBar.setDisplayShowHomeEnabled(true);
+	}
+}

@@ -1,0 +1,95 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lblMyAccount" />
+    
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/lblMyPersonalInfo" />
+
+    <EditText
+        android:id="@+id/edtFirstName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text="Helen"
+        android:inputType="none"
+        android:clickable="false"
+        android:enabled="false" />
+
+    <EditText
+        android:id="@+id/edtSurName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text="Ripley"
+        android:inputType="none"
+        android:clickable="false"
+        android:enabled="false" />
+
+    <EditText
+        android:id="@+id/edtEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text="helen.ripley@nostromo.com"
+        android:inputType="none"
+        android:clickable="false"
+        android:enabled="false" />
+
+    <EditText
+        android:id="@+id/edtAddressLine1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text="102, micile fixe"
+        android:inputType="none"
+        android:clickable="false"
+        android:enabled="false" />
+
+    <EditText
+        android:id="@+id/edtAddressLine2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text=""
+        android:inputType="none"
+        android:clickable="false"
+        android:enabled="false" />
+    
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+     <EditText
+        android:id="@+id/edtAddressZipCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="17000"
+        android:inputType="none"
+        android:clickable="false"
+        android:enabled="false" />
+ 
+     <EditText
+         android:id="@+id/edtAddressCity"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:clickable="false"
+         android:ems="10"
+         android:enabled="false"
+         android:inputType="none"
+         android:text="LA ROCHELLE" />
+
+    </LinearLayout>
+
+</LinearLayout>

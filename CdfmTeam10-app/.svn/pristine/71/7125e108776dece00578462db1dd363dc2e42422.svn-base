@@ -1,0 +1,126 @@
+package com.gtanla.android;
+
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.LatLng;
+
+/**
+ * Handles touch map.
+ * 
+ * @author Nico
+ * 
+ */
+public class TouchMapFragment extends Fragment {
+
+	/**
+	 * Creates and returns a new TouchFilterFragment.
+	 * 
+	 * @return a new TouchFilterFragment.
+	 */
+	public static TouchMapFragment newInstance() {
+		TouchMapFragment fragment = new TouchMapFragment();
+
+		Bundle args = new Bundle();
+		// args.putInt(ActivityParams.PARAM_GAME_INDEX, gameIndex);
+		fragment.setArguments(args);
+
+		return fragment;
+	}
+
+	/**
+	 * The map object.
+	 */
+	private GoogleMap googleMap;
+
+	/**
+	 * The view.
+	 */
+	private MapView mapView;
+
+	private void initializeDeaths() {
+		// for (Death death : AppliContext.getDeaths()) {
+		// map.addMarker(new MarkerOptions()
+		// .position(new LatLng(death.getLat(), death.getLng()))
+		// .title(death.getName() + ", " + death.getState()));
+		// }
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup,
+	 * android.os.Bundle)
+	 */
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View v = inflater.inflate(R.layout.fragment_mapview, container, false);
+
+		// Gets the MapView from the XML layout and creates it
+		mapView = (MapView) v.findViewById(R.id.mapview);
+		mapView.onCreate(savedInstanceState);
+		// http: // marketplace.eclipse.org/marketplace-client-intro?mpc_install=1336
+		// Gets to GoogleMap from the MapView and does initialization stuff
+		googleMap = mapView.getMap();
+		googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+		// map.setMyLocationEnabled(true);
+
+		// Needs to call MapsInitializer before doing any CameraUpdateFactory calls
+		try {
+			MapsInitializer.initialize(this.getActivity());
+		} catch (GooglePlayServicesNotAvailableException e) {
+			e.printStackTrace();
+		}
+
+		// Updates the location and zoom of the MapView
+		CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(43.1, -87.9), 10);
+		googleMap.animateCamera(cameraUpdate);
+
+		this.initializeDeaths();
+
+		return v;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.support.v4.app.Fragment#onDestroy()
+	 */
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		mapView.onDestroy();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.support.v4.app.Fragment#onLowMemory()
+	 */
+	@Override
+	public void onLowMemory() {
+		super.onLowMemory();
+		mapView.onLowMemory();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.support.v4.app.Fragment#onResume()
+	 */
+	@Override
+	public void onResume() {
+		mapView.onResume();
+		super.onResume();
+	}
+
+}

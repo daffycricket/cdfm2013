@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   	<string name="crash_toast_text">Ooooops, CdfmTeam10 a crashé, toutes nos excuses :/</string>
+	<string name="crash_dialog_title">Crash !</string>
+	<string name="crash_dialog_text">Une erreur inconnue a fait crasher CdfmTeam10. En cliquant sur OK vous nous enverrez un rapport par email afin de nous aider à la corriger.</string>  
+	<string name="crash_dialog_ok_toast">Merci !</string>
+</resources>

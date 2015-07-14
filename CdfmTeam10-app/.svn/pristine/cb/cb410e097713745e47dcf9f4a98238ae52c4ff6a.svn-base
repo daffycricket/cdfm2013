@@ -1,0 +1,153 @@
+package com.gtanla.android;
+
+import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.gtanla.android.utils.ConnexionUtils;
+import com.gtanla.android.utils.Constants;
+import com.gtanla.android.utils.DialogHelper;
+
+/**
+ * Main activity for page "HP.a"
+ * 
+ * @author gtalbot
+ * 
+ */
+public class MainDashboardActivity extends Activity {
+
+	/**
+	 * After user click on dialog, start the activity
+	 * 
+	 * @param targetActivity
+	 */
+	private void onButtonWhichNeedSessionClick(final Class<?> targetActivity) {
+
+		// If the user is connected, start target activity
+		if (ConnexionUtils.isConnected(this)) {
+			Intent intent = new Intent(this, targetActivity);
+			this.startActivity(intent);
+		} else {
+			// if no session
+
+			// display a message to the user
+			String title = this.getString(R.string.lblConfirmLoginTitle).toString();
+			String message = this.getString(R.string.lblConfirmLoginMessage).toString();
+			DialogHelper.confirm(this, title, message, new DialogInterface.OnClickListener() {
+
+				/*
+				 * (non-Javadoc)
+				 * 
+				 * @see android.content.DialogInterface.OnClickListener#onClick(android.content.DialogInterface, int)
+				 */
+				@Override
+				public void onClick(DialogInterface dialog, int flag) {
+					Intent intent = new Intent(MainDashboardActivity.this, SigninActivity.class);
+					intent.putExtra(Constants.NEXT_ACTIVITY_CLASS, targetActivity);
+					MainDashboardActivity.this.startActivity(intent);
+					// MainDashboardActivity.this.finish();
+				}
+			});
+
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main_dashboard);
+
+		// track
+		EasyTracker.getInstance(this).send(MapBuilder.createAppView().set(Fields.SCREEN_NAME, "MainDashboard").build());
+
+		// Enable HOME button
+		this.getActionBar().setDisplayHomeAsUpEnabled(false);
+
+		// Add listener on MYACCOUNT button
+		Button btnMyAccount = (Button) this.findViewById(R.id.btnMyAccount);
+		btnMyAccount.setOnClickListener(new OnClickListener() {
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see android.view.View.OnClickListener#onClick(android.view.View)
+			 */
+			@Override
+			public void onClick(View v) {
+				onButtonWhichNeedSessionClick(AccountDashboardActivity.class);
+			}
+		});
+
+		// Click on TOUCH button
+		Button btnTouch = (Button) this.findViewById(R.id.btnTouch);
+		btnTouch.setOnClickListener(new OnClickListener() {
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see android.view.View.OnClickListener#onClick(android.view.View)
+			 */
+			@Override
+			public void onClick(View v) {
+				onButtonWhichNeedSessionClick(TouchActivity.class);
+			}
+		});
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
+
+		// Add disconnect button
+		ConnexionUtils.handleConnectButtons(this, menu);
+
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onStart()
+	 */
+	@Override
+	public void onStart() {
+		super.onStart();
+
+		// Notify Google analytics tracker
+		EasyTracker.getInstance(this).activityStart(this);
+
+		// recreate menu
+		invalidateOptionsMenu();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onStop()
+	 */
+	@Override
+	public void onStop() {
+		super.onStop();
+
+		// Notify Google analytics tracker
+		EasyTracker.getInstance(this).activityStop(this);
+	}
+}

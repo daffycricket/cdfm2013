@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- General -->
+    <string name="app_name">#MOBDL</string>
+    <string name="action_settings">Settings</string>
+    <string name="disconnect">Déconnexion</string>
+    <string name="connect">Connexion</string>
+    <string name="waitMessage">Veuillez patienter svp</string>
+    <string name="lblDescription">L\'appli de la communauté mobile en France</string>
+    <string name="errorMessageNotEmpty">Le champs est obligatoire</string>
+    <string name="errorMessagePasswordConfirmError">Les mots de passe saisis ne sont pas identiques</string>
+    <string name="errorMessageAccountCreationError">Echec de la création du compte : </string>
+    <string name="errorMessageSigninError">Echec de connexion : </string>
+    <string name="errorMessageAccountReceivedError">Impossible d\'obtenir les informations du compte</string>
+    <string name="errorMessageListAccountsError">Impossible d\'obtenir les membres</string>
+    <string name="errorMessageEmailPattern">L\'adresse email n\'est pas valide</string>
+    <string name="errorMessageCgNotChecked">Il est nécessaire de valider les conditions générales</string>
+
+    <!-- Connect / Signin -->
+    <string name="lblSubscribe">Je deviens membre gratuitement et je m\'inscris !</string>
+    <string name="lblBtnFacebookConnect">Facebook Connect</string>
+    <string name="lblOr">OU</string>
+    <string name="lblFirstName">PRENOM</string>
+    <string name="lblSurName">NOM</string>
+    <string name="lblEmail">EMAIL</string>
+    <string name="lblPassword">Mot de passe</string>
+    <string name="lblConfirmPassword">Confirmer mot de passe</string>
+    <string name="lblAddressLine">Adresse</string>
+    <string name="lblAddressZipCode">Code postal</string>
+    <string name="lblAddressCity">Ville</string>
+    <string name="lblBtnSendNewEmail">Obtenir un nouveau password</string>
+    <string name="infoRenewEmailMessage">Un email avec votre nouveau mot de passe va vous être envoyé si vous vous étiez déjà enregistré. Utilisez ce nouveau mot de passe pour vous connecter.</string>
+    
+    
+    
+    <string name="lblAcceptCG">
+<![CDATA[
+J\'accepte <a href="http://team-tarot.appspot.com/cg.html">les conditions générales</a>
+	   	]]>
+    </string>
+    <string name="lblLostPassword">
+<![CDATA[
+<a href="http://todo">Mot de passe oublié</a>
+	   	]]>
+    </string>
+    <string name="lblYouAcceptCGIfYouUseApp">
+<![CDATA[
+En utilisant l\'application #MODDL vous acceptez <a href="http://team-tarot.appspot.com/cg.html">les conditions générales</a>
+	   	]]>
+    </string>
+    <string name="lblBtnLater">Plus tard</string>
+    <string name="lblBtnYes">J\'en suis</string>
+    <string name="lblBtnCreateAccount">Créer compte</string>
+    <string name="lblBtnConnect">Se connecter</string>
+    <string name="lblBtnOk">OK</string>
+    <string name="lblBtnCancel">Annuler</string>
+    <string name="lblAskForGeolocPermissionTitle">Demande de géolocalisation</string>
+    <string name="lblAskForGeolocPermissionMessage">Acceptez-vous d\'être géolocalisé ?</string>
+    <string name="lblGeolocDisabledTitle">Services de géolocalisation désactivés</string>
+    <string name="lblGeolocDisabledMessage">L\'application MODDV doit pouvoir accéder à votre position. Veuillez activer les services de localisation.</string>
+    <string name="lblConfirmLoginTitle">Connexion</string>
+    <string name="lblConfirmLoginMessage">Pour accéder à cette rubrique vous devez être membre et/ou connecté. C’est gratuit!</string>
+
+    <!-- Main Dashboard -->
+    <string name="lblNews">News</string>
+    <string name="lblJobs">Jobs</string>
+    <string name="lblWikiMobi">Wiki Mobi</string>
+    <string name="lblEvents">Events</string>
+    <string name="lblCallProjects">Appel à projets</string>
+    <string name="lblTouch">Touch !</string>
+    <string name="lblQRCode">QRCode</string>
+    <string name="lblMyAccount">Mon compte</string>
+    <string name="lblFavorites">Favoris!</string>
+    <string name="lblChat">Chat</string>
+
+    <!-- Account Dashboard -->
+    <string name="lblMyFavorites">Mes favoris</string>
+    <string name="lblMyEvents">Mes évènements</string>
+    <string name="lblMyParams">Mes paramètres</string>
+    <string name="lblMyPersonalInfo">Mes infos personnelles</string>
+    <string name="lblDisconnect">Se déconnecter</string>
+    <string name="msgAboutLimited">
+<![CDATA[
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. <a href="https://play.google.com/store/apps/details?id=org.nla.tarotdroid&hl=fr">Nullam</a> hendrerit ullamcorper vehicula. Mauris facilisis viverra ipsum et semper. Fusce cursus, lectus interdum auctor consequat, dolor urna varius dolor, placerat blandit odio sem vel lorem. Donec id erat feugiat, volutpat nunc sit amet, condimentum massa. Etiam ipsum nibh, facilisis in facilisis at, sollicitudin sed nibh. Maecenas pellentesque, nisl a euismod vulputate, urna dolor mollis neque, sit amet condimentum felis orci dapibus ante. Nullam sagittis lacus a dolor accumsan condimentum. Fusce a ligula leo. Aenean sed ligula vitae arcu ultrices volutpat vitae et tortor. Quisque tincidunt luctus justo, vitae fringilla quam mollis vel. In non est eget justo laoreet malesuada.
+<br/><br/>
+Aliquam a ornare nunc, ut venenatis eros. Nam eu ipsum eget dui bibendum sagittis nec non dolor. Fusce vestibulum ante sit amet augue tempus imperdiet. Nulla hendrerit enim ut libero laoreet, et ultricies dolor tincidunt. Etiam eu sem in purus tempor venenatis. Morbi ultricies tristique arcu, egestas porttitor lorem auctor non. Quisque congue lacinia malesuada. In euismod consectetur libero, in aliquam tellus accumsan non. Duis vulputate erat vel velit bibendum ullamcorper. Duis eu lorem ac eros ullamcorper varius eu a quam. Donec lobortis lacinia lacinia. Cras egestas arcu et euismod dictum. Sed vulputate commodo gravida.
+<br/><br/>
+Curabitur nulla ligula, luctus eget pretium non, pellentesque eget tellus. Suspendisse laoreet hendrerit vehicula. Cras quis nisi ligula. Morbi interdum pellentesque mollis. Phasellus eget est sem. Suspendisse potenti. Suspendisse potenti. Sed tincidunt lacus lacinia, ullamcorper mi vitae, luctus velit.
+<br/><br/>
+Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec sed mauris arcu. Morbi gravida turpis est, vitae interdum ante sagittis eget. Pellentesque sollicitudin lacus non arcu luctus, non luctus ligula venenatis. Aenean euismod arcu tempor libero auctor volutpat. Fusce vitae lorem condimentum ligula bibendum congue. Proin non condimentum lorem. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
+<br/><br/>
+Maecenas nec arcu dui. In sed eros elit. Phasellus vestibulum erat non auctor lacinia. Maecenas euismod augue non convallis adipiscing. Vivamus ullamcorper hendrerit ipsum vitae egestas. Fusce vel fringilla nibh. Morbi eu consectetur tortor. Aenean imperdiet tincidunt elit sed mollis. Integer pulvinar mi quis sodales blandit. Quisque nec felis felis. Sed condimentum risus ut nibh auctor aliquam. Phasellus bibendum sapien ut magna feugiat pellentesque.
+	   	]]>
+    </string>
+
+    <!-- Account detail -->
+    <string name="lblModify">Modifier</string>
+    <string name="lblSave">Sauvegarder</string>
+
+    <!-- Touch activities -->
+    <string name="lblFilterTitle">Filtrer</string>
+    <string name="lblListTitle">Liste</string>
+    <string name="lblMapTitle">Carte</string>
+    <string name="lblRefreshTitle">Refresh</string>
+    <string name="lblLastSubscribers">Les derniers inscrits</string>
+    <string name="lblAroundMe">Autour de moi</string>
+    <string name="lblAnywhere">N\'importe où</string>
+    
+   
+</resources>

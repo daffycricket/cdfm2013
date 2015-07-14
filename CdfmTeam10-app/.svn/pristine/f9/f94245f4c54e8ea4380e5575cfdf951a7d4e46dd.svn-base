@@ -1,0 +1,215 @@
+package com.gtanla.android;
+
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.text.Html;
+import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.analytics.tracking.android.EasyTracker;
+import com.gtanla.android.cloud.bo.Account;
+import com.gtanla.android.task.CreateAccountTask;
+import com.gtanla.android.task.IAsyncCallback;
+import com.gtanla.android.utils.PreferenceConstants;
+import com.gtanla.android.utils.ValidationUtils;
+
+public class ConnectActivity extends Activity {
+
+	/** Call back after account creation. */
+	private final IAsyncCallback<Object> onAccountCreatedCallback = new IAsyncCallback<Object>() {
+
+		/**
+		 * Method call after account creation. The parameter must be the Account identifier
+		 * 
+		 * @param object
+		 */
+		@Override
+		public void execute(Object object) {
+			onAccountCreated(object);
+		}
+	};
+
+	/** Waiting div. */
+	private ProgressDialog progressDialog;
+
+	/**
+	 * Called after account creation.
+	 * 
+	 * @param object
+	 */
+	private void onAccountCreated(Object object) {
+		// Check parameter
+		if (object == null || !Long.class.isInstance(object)) {
+
+			// Get default error message
+			String errorMessageAccountCreationError = ConnectActivity.this.getResources()
+					.getText(R.string.errorMessageAccountCreationError).toString();
+
+			// Append specific message
+			if (object != null && Exception.class.isInstance(object)) {
+				errorMessageAccountCreationError += ((Exception) object).getMessage();
+			}
+
+			// Display error and retur
+			Toast.makeText(ConnectActivity.this, errorMessageAccountCreationError, Toast.LENGTH_LONG).show();
+
+			// Hide waiting div
+			if (ConnectActivity.this.progressDialog.isShowing()) {
+				ConnectActivity.this.progressDialog.dismiss();
+			}
+			return;
+		}
+
+		// Store id
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ConnectActivity.this);
+		SharedPreferences.Editor editor = preferences.edit();
+		editor.putLong(PreferenceConstants.ACCOUNT_ID, (Long) object);
+		editor.commit();
+
+		// Launch next activity
+		Intent intent = new Intent(ConnectActivity.this, MainDashboardActivity.class);
+		ConnectActivity.this.startActivity(intent);
+
+		// Close activity
+		ConnectActivity.this.finish();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_connect);
+
+		// Set listener for LATER button
+		Button btnLater = (Button) this.findViewById(R.id.btnLater);
+		btnLater.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(ConnectActivity.this, MainDashboardActivity.class);
+				ConnectActivity.this.startActivity(intent);
+			}
+		});
+
+		// Set listener for YES button
+		Button btnYes = (Button) this.findViewById(R.id.btnYes);
+		btnYes.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				// Display waiting div
+				// TODO: GTA / ne fonctionne pas
+				String message = ConnectActivity.this.getResources().getText(R.string.waitMessage).toString();
+				ConnectActivity.this.progressDialog = ProgressDialog
+						.show(ConnectActivity.this, message, message, false);
+
+				// Get inputs
+				EditText edtFirstName = ((EditText) ConnectActivity.this.findViewById(R.id.edtFirstName));
+				EditText edtSurName = ((EditText) ConnectActivity.this.findViewById(R.id.edtSurName));
+				EditText edtEmail = ((EditText) ConnectActivity.this.findViewById(R.id.edtEmail));
+				EditText edtPassword = ((EditText) ConnectActivity.this.findViewById(R.id.edtPassword));
+				EditText edtPasswordConfirm = ((EditText) ConnectActivity.this.findViewById(R.id.edtPasswordConfirm));
+				CheckBox chkAcceptCG = ((CheckBox) ConnectActivity.this.findViewById(R.id.chkAcceptCG));
+
+				// Validate inputs
+				String errorMessageNotEmpty = ConnectActivity.this.getResources()
+						.getText(R.string.errorMessageNotEmpty).toString();
+				String errorMessageNotEquals = ConnectActivity.this.getResources()
+						.getText(R.string.errorMessagePasswordConfirmError).toString();
+				String errorMessageEmailPattern = ConnectActivity.this.getResources()
+						.getText(R.string.errorMessageEmailPattern).toString();
+				String errorMessageCgNotChecked = ConnectActivity.this.getResources()
+						.getText(R.string.errorMessageCgNotChecked).toString();
+				boolean validity = ValidationUtils.validateEditTextNotEmpty(edtFirstName, errorMessageNotEmpty);
+				validity &= ValidationUtils.validateEditTextNotEmpty(edtSurName, errorMessageNotEmpty);
+				validity &= ValidationUtils.validateEditTextIsEmail(edtEmail, errorMessageEmailPattern);
+				validity &= ValidationUtils.validateEditTextNotEmpty(edtPassword, errorMessageNotEmpty);
+				validity &= ValidationUtils.validateEditTextNotEmpty(edtPasswordConfirm, errorMessageNotEmpty);
+				validity &= ValidationUtils.validateEditTextEquals(edtPasswordConfirm,
+						edtPassword.getText().toString(), errorMessageNotEquals);
+				validity &= ValidationUtils.validateCheckBoxChecked(chkAcceptCG, errorMessageCgNotChecked);
+
+				// If the form is valid
+				if (validity) {
+
+					// read values
+					String edtFirstNamValue = edtFirstName.getText().toString();
+					String edtSurNameValue = edtSurName.getText().toString();
+					String edtEmailValue = edtEmail.getText().toString();
+					String edtPasswordValue = edtPassword.getText().toString();
+
+					// Create account instance
+					Account account = new Account(null, edtEmailValue, edtFirstNamValue, null, edtSurNameValue,
+							edtPasswordValue);
+
+					// Call async task to create an account
+					CreateAccountTask task = new CreateAccountTask(onAccountCreatedCallback, account);
+					task.execute();
+				}
+
+				// If validation errors, close progressBar
+				if (ConnectActivity.this.progressDialog.isShowing()) {
+					ConnectActivity.this.progressDialog.dismiss();
+				}
+			}
+		});
+
+		// Set link on CG button
+		// TODO: GTA / ne fonctionne pas
+		TextView txtAcceptCG = (TextView) this.findViewById(R.id.txtAcceptCG);
+		txtAcceptCG.setText(Html.fromHtml(this.getText(R.string.lblAcceptCG).toString()));
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onStart()
+	 */
+	@Override
+	public void onStart() {
+		super.onStart();
+
+		// Notify Google analytics tracker
+		EasyTracker.getInstance(this).activityStart(this);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onStop()
+	 */
+	@Override
+	public void onStop() {
+		super.onStop();
+
+		// Notify Google analytics tracker
+		EasyTracker.getInstance(this).activityStop(this);
+	}
+}

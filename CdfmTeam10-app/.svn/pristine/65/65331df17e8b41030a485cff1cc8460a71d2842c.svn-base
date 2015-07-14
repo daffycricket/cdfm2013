@@ -1,0 +1,84 @@
+package com.gtanla.android.task;
+
+import android.location.Location;
+import android.location.LocationListener;
+import android.os.AsyncTask;
+import android.os.Bundle;
+
+import com.gtanla.android.cloud.BackendClient;
+import com.gtanla.android.cloud.BackendException;
+
+/**
+ * An AsyncTask aimed to signin.
+ */
+public class SigninTask extends AsyncTask<String, Void, Object> {
+
+	/** Callback */
+	private final IAsyncCallback<Object> callback;
+
+	/**
+	 * The location identified by geoloc service.
+	 */
+	protected Location mLocation;
+
+	/**
+	 * The local location listener.
+	 */
+	private final LocationListener mLocationListener = new LocationListener() {
+
+		@Override
+		public void onLocationChanged(Location location) {
+			mLocation = location;
+		}
+
+		@Override
+		public void onProviderDisabled(String provider) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onProviderEnabled(String provider) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onStatusChanged(String provider, int status, Bundle extras) {
+			// TODO Auto-generated method stub
+
+		}
+	};
+
+	/**
+	 * @param callback
+	 */
+	public SigninTask(IAsyncCallback<Object> callback) {
+		super();
+		this.callback = callback;
+	}
+
+	@Override
+	protected Object doInBackground(String... args) {
+		String email = args[0];
+		String password = args[1];
+		Object toReturn = null;
+
+		try {
+			toReturn = BackendClient.getInstance().checkAccount(email, password);
+		} catch (BackendException e) {
+			toReturn = e;
+		}
+
+		return toReturn;
+	}
+
+	@Override
+	protected void onPostExecute(Object result) {
+
+		// Call callback
+		if (callback != null) {
+			callback.execute(result);
+		}
+	}
+}

@@ -1,0 +1,141 @@
+package com.gtanla.backend.service;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.ws.rs.core.HttpHeaders;
+
+import com.gtanla.backend.bo.Account;
+import com.gtanla.backend.dao.AccountDao;
+import com.gtanla.backend.exception.BackendException;
+
+public class AccountService {
+
+	/** Equals for cookie. */
+	private static final String COOKIE_EQUALS = "=";
+
+	/** Cookie name for EMAIL. */
+	private static final String COOKIE_NAME_EMAIL = "EMAIL";
+
+	/** Cookie name for PASSWORD. */
+	private static final String COOKIE_NAME_PASSWORD = "PASSWORD";
+
+	/** Cookie separator. */
+	private static final String COOKIE_SEPARATOR = ";";
+
+	/** Logger. */
+	public static final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+
+	/**
+	 * Creates Account entity from headers.
+	 * 
+	 * @return Account if exists,
+	 * @throws Exception
+	 */
+	public static Account checkFullAuthentication(HttpHeaders headers) throws BackendException {
+
+		String email = null;
+		String password = null;
+		Account toReturn = null;
+
+		// get email/mdp from headers
+		List<String> cookieHeaderss = headers.getRequestHeader(HttpHeaders.COOKIE);
+		if (cookieHeaderss != null && cookieHeaderss.size() > 0 && cookieHeaderss.get(0) != null) {
+			String[] cookieHeaders = cookieHeaderss.get(0).split(COOKIE_SEPARATOR);
+
+			for (String cookieHeader : cookieHeaders) {
+				if (!cookieHeader.contains(COOKIE_EQUALS)) {
+					break;
+				}
+
+				String[] cookieHeaderParts = cookieHeader.split(COOKIE_EQUALS);
+				if (cookieHeaderParts[0].trim().equalsIgnoreCase(COOKIE_NAME_EMAIL)) {
+					email = cookieHeaderParts[1];
+				} else if (cookieHeaderParts[0].trim().equalsIgnoreCase(COOKIE_NAME_PASSWORD)) {
+					password = cookieHeaderParts[1];
+				}
+			}
+		}
+
+		// no auth
+		if (email == null || password == null) {
+			LOG.log(Level.SEVERE, "Authentication: email or password not provided");
+			// check auth
+		} else {
+			// check if user has proper account
+			toReturn = AccountService.getByEmail(email);
+			if (toReturn == null) {
+				LOG.log(Level.WARNING, "Authentication: No account for " + email);
+				// check if user/pws match
+			} else {
+				if (!toReturn.getPassword().equals(password)) {
+					LOG.log(Level.WARNING, "Authentication: incorrect email/password combination");
+					toReturn = null;
+				}
+			}
+		}
+
+		return toReturn;
+	}
+
+	/**
+	 * Create an account.
+	 * 
+	 * @param account
+	 *            An account to create
+	 */
+	public static Account create(Account account) throws BackendException {
+		Account res = AccountDao.getInstance().create(account);
+		return res;
+	}
+
+	/**
+	 * Create some accounts.
+	 * 
+	 * @param accounts
+	 *            Some accounts to create
+	 */
+	public static void create(Collection<Account> accounts) throws BackendException {
+		if (accounts != null) {
+			for (Account account : accounts) {
+				create(account);
+			}
+		}
+	}
+
+	/**
+	 * Retrieve an account by its ID.
+	 * 
+	 * @param id
+	 *            Account identifier
+	 * @return The account instance.
+	 */
+	public static Account get(Long id) throws BackendException {
+		AccountDao dao = AccountDao.getInstance();
+		return dao.get(id);
+	}
+
+	/**
+	 * Retrieve an account by its email.
+	 * 
+	 * @param email
+	 *            Account email.
+	 * @return The account instance.
+	 */
+	public static Account getByEmail(String email) throws BackendException {
+		AccountDao dao = AccountDao.getInstance();
+		return dao.getByEmail(email);
+	}
+
+	/**
+	 * List all account
+	 * 
+	 * @return
+	 */
+	public static Collection<Account> listAccounts() throws BackendException {
+		AccountDao dao = AccountDao.getInstance();
+		return dao.list();
+	}
+}

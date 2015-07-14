@@ -1,0 +1,67 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <!-- Activity titles - start -->
+
+    <LinearLayout style="@style/activityLinearLayout" >
+
+        <LinearLayout style="@style/activityTitleLayout" >
+
+            <TextView
+                style="@style/activityTitle"
+                android:text="@string/lblTouch" />
+
+            <View
+                style="@style/activityBar"
+                android:layout_width="match_parent" />
+        </LinearLayout>
+
+        <TextView
+            style="@style/activitySubTitle"
+            android:text="@string/lblLastSubscribers" />
+    </LinearLayout>
+    <!-- Activity titles - end -->
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="TODO CAROUSEL..." />
+
+    <LinearLayout
+        style="@style/dashboardMainLayout"
+        android:weightSum="1" >
+
+        <LinearLayout
+            style="@style/dashboardLayout"
+            android:layout_weight="1" >
+
+            <FrameLayout style="@style/dashboardFrame" >
+
+                <ImageView
+                    style="@style/dashboardImage"
+                    android:src="@drawable/backg_red_normal" />
+
+                <Button
+                    android:id="@+id/btnAroundMe"
+                    style="@style/dashboardButton"
+                    android:text="@string/lblAroundMe" />
+            </FrameLayout>
+
+            <FrameLayout style="@style/dashboardFrame" >
+
+                <ImageView
+                    style="@style/dashboardImage"
+                    android:src="@drawable/backg_green_normal" />
+
+                <Button
+                    android:id="@+id/btnAnyWhere"
+                    style="@style/dashboardButton"
+                    android:text="@string/lblAnywhere" />
+            </FrameLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

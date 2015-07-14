@@ -1,0 +1,53 @@
+1385210272133	Copy file
+1385210965194	Copy file
+1385211701268	Copy file
+1385214715867	Copy file
+1385216354491	Copy file
+1385217167162	Rename resource 'activity_main_connect.xml'
+1385217186270	Copy file
+1385217417360	Rename resource 'activity_dashboard.xml'
+1385217432792	Rename resource 'main_dashboard.xml'
+1385217440421	Rename resource 'account_dashboard.xml'
+1385217855728	Copy file
+1385218464829	Copy compilation unit
+1385218482679	Rename type 'MainConnectActivity'
+1385218503132	Copy compilation unit
+1385218532274	Copy compilation unit
+1385220047162	Copy compilation unit
+1385220555491	Delete element
+1385220557799	Delete element
+1385220631207	Delete element
+1385220673056	Delete element
+1385220675128	Delete element
+1385220686159	Delete element
+1385220698636	Delete element
+1385220710464	Rename resource 'icon-96.png'
+1385220755345	Rename resource 'icon-launcher.png'
+1385220801027	Rename resource 'icon-48.png'
+1385220806803	Rename resource 'icon-36.png'
+1385220811538	Rename resource 'icon-72.png'
+1385221133176	Delete element
+1385223769127	Rename type 'IAsyncCalbback'
+1385239198002	Copy file
+1385239391409	Copy compilation unit
+1385245341681	Rename field 'preferences'
+1385245349334	Rename field 'progressDialog'
+1385246828802	Rename compilation unit 'GpsTracker.java'
+1385253118073	Copy file
+1385253969915	Copy file
+1385261478244	Copy compilation unit
+1385262943288	Copy compilation unit
+1385263060604	Rename resource 'fragment_map.xml'
+1385263083226	Copy file
+1385265859338	Rename field 'googleMap'
+1385265868159	Rename field 'mapView'
+1385268994127	Rename resource 'deaths_list_item.xml'
+1385270019362	Rename resource 'account_list_item.xml'
+1385272152781	Copy compilation unit
+1385272505539	Copy file
+1385276149474	Copy file
+1385279351622	Copy file
+1385279382436	Rename resource ' activity_newpassword.xml'
+1385279403423	Copy compilation unit
+1385280271163	Copy compilation unit
+1385283126577	Rename type 'RenewEmailTask'
